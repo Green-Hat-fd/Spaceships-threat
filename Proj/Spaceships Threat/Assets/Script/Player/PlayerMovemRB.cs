@@ -26,7 +26,8 @@ public class PlayerMovemRB : MonoBehaviour
     [SerializeField] Transform spaceshipModel;
 
     [Space(10)]
-    [SerializeField] float maxHeight = 1 / 4;
+    [SerializeField] float maxWavingHeight = 0.15f;
+    [SerializeField] float wavingVelocity = 5;
 
     [Space(10)]
     #region Tooltip()
@@ -71,7 +72,7 @@ public class PlayerMovemRB : MonoBehaviour
 
 
         //The sine wave of the model
-        Vector3 waveModel_anim = Mathf.Sin(Time.time * 2) * maxHeight * Vector3.up;
+        Vector3 waveModel_anim = Mathf.Sin(Time.time * wavingVelocity) * maxWavingHeight * Vector3.up;
         spaceshipModel.localPosition = waveModel_anim;
 
         #endregion
