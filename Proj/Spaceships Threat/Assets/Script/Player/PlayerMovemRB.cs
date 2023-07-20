@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMovemRB : MonoBehaviour
 {
     GameObject spaceshipToMove;
+    [SerializeField] PlayerStatsSO_Script statsSO;
     [SerializeField] Rigidbody rb;
 
     [Space(10)]
@@ -78,11 +79,14 @@ public class PlayerMovemRB : MonoBehaviour
         #endregion
     }
 
-    RaycastHit hitBase;
     void FixedUpdate()
     {
+        Vector3 forceVect = moveVect.normalized * playerVelocity;
+        forceVect *= 10f;
+        forceVect *= statsSO.GetSpeedMultiplier();
+
         //(Simple) Horizontal player movement
-        rb.AddForce(moveVect.normalized * playerVelocity * 10f, ForceMode.Force);
+        rb.AddForce(forceVect, ForceMode.Force);
 
 
         #region Boundary box movement limit

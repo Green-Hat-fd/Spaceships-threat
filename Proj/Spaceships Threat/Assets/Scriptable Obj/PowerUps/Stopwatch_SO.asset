@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1a9b832579c019499770cecb5f5c209, type: 3}
-  m_Name: PowerUpTest_SO
+  m_Script: {fileID: 11500000, guid: 82c898e260a27714295916825d1e5932, type: 3}
+  m_Name: Stopwatch_SO
   m_EditorClassIdentifier: 
   isUnlocked: 0
   isActive: 0
-  basePrice: 0
-  price: 0
-  priceCurve:
+  basePrice: 1500
+  priceNow: 0
+  priceAddedCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -30,7 +30,7 @@ MonoBehaviour:
       outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 1.0000027
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -41,4 +41,4 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   upgradeStage: 0
-  maxUpgradeStages: 1
+  maxUpgradeStages: 3
