@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerMovemRB : MonoBehaviour
 {
+    InputManager.PlayerActions PlayerInput;
+    InputManager.GeneralActions GeneralInput;
+
     GameObject spaceshipToMove;
     [SerializeField] PlayerStatsSO_Script statsSO;
     [SerializeField] Rigidbody rb;
@@ -48,9 +51,12 @@ public class PlayerMovemRB : MonoBehaviour
 
     private void Update()
     {
+        PlayerInput = GameManager.inst.inputManager.Player;
+        GeneralInput = GameManager.inst.inputManager.General;
+
         //Takes the axes from the movement input
-        xMovement = GameManager.inst.inputManager.Player.Movement.ReadValue<Vector2>().x;
-        yMovement = GameManager.inst.inputManager.Player.Movement.ReadValue<Vector2>().y;
+        xMovement = PlayerInput.Movement.ReadValue<Vector2>().x;
+        yMovement = PlayerInput.Movement.ReadValue<Vector2>().y;
 
         moveVect = transform.up * yMovement + transform.right * xMovement;      //Horizontal movement vector
 
@@ -97,13 +103,8 @@ public class PlayerMovemRB : MonoBehaviour
             //Takes the local position, and
             //restricts the player's movement inside the "boundaryBox"
             Vector3 pos = spaceshipToMove.transform.localPosition;
-        
-            pos.x = Mathf.Clamp(pos.x,
-                                -(boundaryBox.x - playerSize.x) / 2,
-                                (boundaryBox.x - playerSize.x) / 2);
-            pos.y = Mathf.Clamp(pos.y,
-                                -(boundaryBox.y - playerSize.y) / 2,
-                                (boundaryBox.y - playerSize.y) / 2);
+
+            pos = LimitInsideBoundaryBox(pos);
         
             spaceshipToMove.transform.localPosition = pos;
         }
@@ -127,6 +128,34 @@ public class PlayerMovemRB : MonoBehaviour
         #endregion
     }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns>The position calculated inside the boundary box</returns>
+    public Vector3 LimitInsideBoundaryBox(Vector3 position)
+    {
+        position.x = Mathf.Clamp(position.x,
+                                 -(boundaryBox.x - playerSize.x) / 2,
+                                 (boundaryBox.x - playerSize.x) / 2);
+        
+        position.y = Mathf.Clamp(position.y,
+                                 -(boundaryBox.y - playerSize.y) / 2,
+                                 (boundaryBox.y - playerSize.y) / 2);
+
+        return position;
+    }
+
+
+
+    #region Custom Get Functions
+
+    public Rigidbody GetRB() => rb;
+
+    public Vector2 GetBoundaryBox() => boundaryBox;
+
+    #endregion
 
 
     #region EXTRA - Gizmos

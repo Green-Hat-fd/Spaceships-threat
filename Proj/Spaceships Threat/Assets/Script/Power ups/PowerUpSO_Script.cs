@@ -14,7 +14,7 @@ public class PowerUpSO_Script : ScriptableObject
     #endregion
     [SerializeField] bool isActive = true;
 
-    [Space(20)]
+    [Header("—— Prices ——")]
     [SerializeField] int basePrice;
     [SerializeField] int priceNow;
     #region Tooltip()
@@ -32,6 +32,15 @@ public class PowerUpSO_Script : ScriptableObject
     [Range(1, 8)]
     [SerializeField] int maxUpgradeStages = 0;
 
+    [Header("—— Recharge time ——")]
+    [SerializeField] bool isRechargable;
+    [Min(0)]
+    [SerializeField] float rechargeTime;
+    #region Tooltip()
+    [Tooltip("Timer for the power-up to recharge")]
+    #endregion
+    [SerializeField] CustomTimer timer = new CustomTimer();
+
 
 
     /// <summary>
@@ -45,6 +54,20 @@ public class PowerUpSO_Script : ScriptableObject
         
         priceNow = Mathf.RoundToInt(_newPrice);
     }
+
+    public void UpdateTimer()
+    {
+        timer.maxTime = rechargeTime;
+    }
+
+
+    #region Custom Get Functions
+
+    public float GetRechargeTime() => rechargeTime;
+
+    public CustomTimer GetTimer() => timer;
+
+    #endregion
 
 
     #region EXTRA - Changing the Inspector

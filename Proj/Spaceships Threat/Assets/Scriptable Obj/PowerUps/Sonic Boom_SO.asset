@@ -42,3 +42,5 @@ MonoBehaviour:
     m_RotationOrder: 4
   upgradeStage: 0
   maxUpgradeStages: 5
+  isRechargable: 1
+  rechargeTime: 10

@@ -15,7 +15,7 @@ MonoBehaviour:
   isDead: 0
   health: 3
   maxHealth: 6
-  scraps_temp: 0
+  scraps_temp: 1234567
   allScraps: 0
   DEBUG: 0
   powerDownTime: 0

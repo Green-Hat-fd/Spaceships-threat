@@ -14,7 +14,7 @@ public class ChangeTextScript : MonoBehaviour
     [Space(10)]
     [SerializeField] OptionsSO_Script optionsSO;
 
-    [Header("Languages (Scriptable Obj.)")]
+    [Header("—— Languages (Scriptable Obj.) ——")]
     [SerializeField] LanguageSO_Script english;
     [SerializeField] LanguageSO_Script italian;
 
