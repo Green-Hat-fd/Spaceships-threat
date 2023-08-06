@@ -27,13 +27,16 @@ public class DashPowerUp : MonoBehaviour
 
         playerMovem = PlayerInput.Movement.ReadValue<Vector2>();
 
+        //All checks happening before the power-up get used
+        bool isDashActive = dash_SO.GetIsActive();
         bool isFullyCharged = dash_SO.GetTimer().CheckIsOver();
         bool isActionButtonPressed = PlayerInput.Dash.triggered;
         bool isPlayerMoving = playerMovem != Vector3.zero;
 
         //Checks if the Dash power is ready to use
-        // + the player has pressed the action button
-        if(isFullyCharged && isPlayerMoving && isActionButtonPressed)
+        //(has been bought and it's charged)
+        // + if the player has pressed the action button
+        if(isActionButtonPressed && isDashActive && isFullyCharged && isPlayerMoving)
         {
             ActivateDashPowerUp();
 
@@ -46,7 +49,7 @@ public class DashPowerUp : MonoBehaviour
         //Calculates the next 
         Vector3 vectToMove = movemScript.GetRB().position
                               +
-                              playerMovem * distanceToDash;
+                             playerMovem * distanceToDash;
 
         //Limits the new "dash position" inside the boundary box
         vectToMove = movemScript.LimitInsideBoundaryBox(vectToMove);
@@ -59,6 +62,8 @@ public class DashPowerUp : MonoBehaviour
         #endregion
     }
 
+
+    #region EXTRA - Gizmos
 
     private void OnDrawGizmosSelected()
     {
@@ -73,4 +78,6 @@ public class DashPowerUp : MonoBehaviour
             Gizmos.DrawSphere(p, 0.25f);
         }
     }
+
+    #endregion
 }

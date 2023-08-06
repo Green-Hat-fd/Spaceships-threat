@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 
-public class PlayerStatsManager : MonoBehaviour
+public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
 {
     [SerializeField] PlayerStatsSO_Script stats_SO;
     [Space(5)]
@@ -102,12 +102,16 @@ public class PlayerStatsManager : MonoBehaviour
         }
 
 
+        //Hides the icons that are not bought yet
+        icons[0].enabled = dash_powerUp_SO.GetIsActive();
+        icons[1].enabled = sonicBoom_powerUp_SO.GetIsActive();
+
         //Changes the fill amount of the icons
         //to the time remaining on each timer
-        icons[0].fillAmount = CocaCola(dash_powerUp_SO.GetTimer());
-        icons[1].fillAmount = CocaCola(sonicBoom_powerUp_SO.GetTimer());
+        icons[0].fillAmount = RecieveElapsedTimeOnTimer(dash_powerUp_SO.GetTimer());
+        icons[1].fillAmount = RecieveElapsedTimeOnTimer(sonicBoom_powerUp_SO.GetTimer());
 
-        //Changes all the charging icons
+        //Changes the charge of all icons
         //(Recharging = gray and semi-transparent)
         //(Fully charged = visible)
         foreach (Image img in icons)
@@ -124,17 +128,31 @@ public class PlayerStatsManager : MonoBehaviour
 
 
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="_timer"></param>
     /// <returns>The time elapsed in percentage, if the timer's over, it returns 1</returns>
-    float CocaCola(CustomTimer _timer)
+    float RecieveElapsedTimeOnTimer(CustomTimer _timer)
     {
-        //Returns 
+        //Returns the time elapsed as a percentage,
+        //or else returns 1 if the timer's over
         return _timer.CheckIsOver()
                 ? 1
                 : _timer.PercentElapsedTime();
     }
+
+
+    public void TakeDamage(float amount)
+    {
+        stats_SO.RemoveHealth();
+
+
+        #region Feedback
+
+        #endregion
+    }
+
+
+    public void CheckDeath() { }
 
 
     #region EXTRA - Changing the Inspector

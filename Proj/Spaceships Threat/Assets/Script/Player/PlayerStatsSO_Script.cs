@@ -46,7 +46,8 @@ public class PlayerStatsSO_Script : ScriptableObject
 
     public void RemoveHealth()
     {
-        health--;
+        if(health > 0)  //Checks if it's not already dead
+            health--;
     }
     public void AddHealth()
     {

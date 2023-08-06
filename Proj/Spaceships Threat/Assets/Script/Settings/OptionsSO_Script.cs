@@ -77,21 +77,6 @@ public class OptionsSO_Script : ScriptableObject
 
 
     //Options
-    #region Mouse Sensitivity
-
-    [Space(15)]
-    [SerializeField] float sensitivityMultip = 1f;
-
-    public void ChangeSensitivity(float s)
-    {
-        sensitivityMultip = s;
-    }
-
-    public float GetSensitivity() => sensitivityMultip;
-
-    #endregion
-
-
     #region Language Selection
 
     [Space(15)]

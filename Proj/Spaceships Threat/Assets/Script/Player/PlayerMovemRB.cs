@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovemRB : MonoBehaviour
+public class PlayerMovemRB : MonoBehaviour, IPlayer
 {
     InputManager.PlayerActions PlayerInput;
     InputManager.GeneralActions GeneralInput;

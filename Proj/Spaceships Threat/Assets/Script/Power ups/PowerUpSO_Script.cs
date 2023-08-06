@@ -6,11 +6,11 @@ using UnityEngine;
 public class PowerUpSO_Script : ScriptableObject
 {
     #region Tooltip()
-    [Tooltip("If the power-up is \"grayed out\" \nand cannot be bought")]
+    [Tooltip("If the power-up is \"grayed out\" \nand cannot be bought \n\t(when false)")]
     #endregion
     [SerializeField] bool isUnlocked = true;
     #region Tooltip()
-    [Tooltip("If the power-up is unlocked \nbut hasn't been bought yet")]
+    [Tooltip("If the power-up is unlocked \nbut hasn't been bought yet \n\t(when false)")]
     #endregion
     [SerializeField] bool isActive = true;
 
@@ -62,6 +62,8 @@ public class PowerUpSO_Script : ScriptableObject
 
 
     #region Custom Get Functions
+
+    public bool GetIsActive() => isActive;
 
     public float GetRechargeTime() => rechargeTime;
 
