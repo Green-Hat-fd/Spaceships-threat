@@ -9,8 +9,9 @@ public class CustomTimer
     private float _maxTime;
     private float _timeElapsed;
 
-    private bool _isActive = true;   //Used to pause/resume the timer
-    private bool _isOver = false;    //Changed when the timer will be over
+    private bool _isActive = true;      //Used to pause/resume the timer
+    private bool _isOver = false;       //Changed when the timer will be over
+    private bool _isLooping = false;   //Used to restart the timer when it's done
     
     public UnityEvent OnTimerDone_event = new UnityEvent();
 
@@ -27,6 +28,8 @@ public class CustomTimer
     #endregion
 
 
+    #region  - Properties -
+
     /// <summary>
     /// The max time to wait in seconds
     /// </summary>
@@ -40,6 +43,8 @@ public class CustomTimer
     {
         get => _timeElapsed;
     }
+
+    #endregion
 
 
     /// <summary>
@@ -55,10 +60,13 @@ public class CustomTimer
             _timeElapsed = 0;     //Reset the timer
             _isActive = false;    //Block the timer
             _isOver = true;
+
+            if (_isLooping)
+                Restart();
         }
         else
         {
-            if(_isActive)
+            if (_isActive)
                 _timeElapsed += Time.deltaTime;   //Increases the elapsed time
         }
     }
@@ -76,13 +84,19 @@ public class CustomTimer
             _timeElapsed = 0;     //Reset the timer
             _isActive = false;    //Block the timer
             _isOver = true;
+
+            if (_isLooping)
+                Restart();
         }
         else
         {
-            if(_isActive)
+            if (_isActive)
                 _timeElapsed += timeToAdd;   //Increases the elapsed time
         }
     }
+
+
+    #region Timer Manipulation (functions)
 
     /// <summary>
     /// Restart the timer from the start and activates it
@@ -110,6 +124,20 @@ public class CustomTimer
     }
 
     /// <summary>
+    /// Choose to make the timer infinite (restarts when it's done) or not
+    /// <br></br>(OFF by default)
+    /// </summary>
+    public void LoopTimer(bool val)
+    {
+        _isLooping = val;
+    }
+
+    #endregion
+
+
+    #region Custom Get functions
+
+    /// <summary>
     /// Returns if the timer is over
     /// </summary>
     public bool CheckIsOver() => _isOver;
@@ -118,6 +146,10 @@ public class CustomTimer
     /// Returns the elapsed time in percentage
     /// </summary>
     public float PercentElapsedTime() => timeElapsed / maxTime;
+
+    #endregion
+
+
 
     #region UNUSED
     /// <summary>

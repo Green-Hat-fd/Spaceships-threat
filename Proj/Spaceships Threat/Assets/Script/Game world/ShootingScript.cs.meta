@@ -1,10 +1,9 @@
 fileFormatVersion: 2
-guid: 26f90d03e9c9fda499ad3a76c980d208
+guid: 997c1c9e2a0412d43a3cc9e9f964fdc5
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - sonicBoom_SO: {fileID: 11400000, guid: aa0987eaf3f3e614b8298341a6a32810, type: 2}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

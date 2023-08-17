@@ -12,4 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a297159aee822347ba650544927521b, type: 3}
   m_Name: English (Language)
   m_EditorClassIdentifier: 
-  textsToChange: []
+  textsToChange:
+  - tag: t_Start_game
+    text: Start to play
+  - tag: t_Options
+    text: Options
+  - tag: t_Exit
+    text: 'Leave
+
+      the game'

@@ -21,7 +21,12 @@ public class DashPowerUp : MonoBehaviour
         
         //---Timer---//
         dash_SO.UpdateTimer();
-        dash_SO.GetTimer().AddTimeToTimer();
+        if (dash_SO.GetIsActive())
+        {
+            //Makes the timer run only                                         
+            //if the power-up it's active
+            dash_SO.GetTimer().AddTimeToTimer();
+        }
 
 
 

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SonicBoomPowerUp : MonoBehaviour
 {
+    MouseCursorManager cursorManager;
+    
     InputManager.PlayerActions PlayerInput;
 
     [SerializeField] PowerUpSO_Script sonicBoom_SO;
@@ -13,13 +15,28 @@ public class SonicBoomPowerUp : MonoBehaviour
 
 
 
+    private void Awake()
+    {
+        cursorManager = FindObjectOfType<MouseCursorManager>();
+
+        //Changes the cursor when fully charged
+        sonicBoom_SO.GetTimer().OnTimerDone_event
+                               .AddListener(
+                                () => cursorManager.ChangeCursor_Crosshair());
+    }
+
     void Update()
     {
         PlayerInput = GameManager.inst.inputManager.Player;
 
         //---Timer---//
         sonicBoom_SO.UpdateTimer();
-        sonicBoom_SO.GetTimer().AddTimeToTimer();
+        if (sonicBoom_SO.GetIsActive())
+        {
+            //Makes the timer run only                                         
+            //if the power-up it's active
+            sonicBoom_SO.GetTimer().AddTimeToTimer();
+        }
 
 
 
@@ -41,6 +58,11 @@ public class SonicBoomPowerUp : MonoBehaviour
 
     void ActivateSonicBoomPowerUp()
     {
+        //TODO: Spara il BoatoSonico/SonicBoom
+
+
+        //Revert the cursor to default when used
+        cursorManager.ChangeCursor_Default();
 
 
         #region Animations
