@@ -125,6 +125,29 @@ public class OptionsSO_Script : ScriptableObject
         soundVolume = vS * 100;
     }
 
+    ///<summary></summary>
+    /// <param name="vM"> new volume, in range [0; 11]</param>
+    public void ChangeMusicVolumeTen(float vM)
+    {
+        vM /= 10;
+
+        //Puts as volume in the mixer between [-80; 5] dB
+        generalMixer.SetFloat("musVol", audioCurve.Evaluate(vM));
+
+        musicVolume = vM * 100;
+    }
+    ///<summary></summary>
+    /// <param name="vS"> new volume, in range [0; 11]</param>
+    public void ChangeSoundVolumeTen(float vS)
+    {
+        vS /= 10;
+
+        //Puts as volume in the mixer between [-80; 5] dB
+        generalMixer.SetFloat("sfxVol", audioCurve.Evaluate(vS));
+
+        soundVolume = vS * 100;
+    }
+
     public AnimationCurve GetVolumeCurve() => audioCurve;
 
     public float GetMusicVolume() => audioCurve.Evaluate(musicVolume);
@@ -146,6 +169,8 @@ public class OptionsSO_Script : ScriptableObject
 
         fullscreen = yn;
     }
+
+    public bool GetIsFullscreen() => fullscreen;
 
     #endregion
 

@@ -7,7 +7,11 @@ using UnityEngine.Events;
 
 public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
 {
+    [SerializeField] MainGameManager mainGameManag;
+    
+    [Space(20)]
     [SerializeField] PlayerStatsSO_Script stats_SO;
+    PlayerMovemRB playerMovScript;
     [Space(5)]
     [SerializeField] PowerUpSO_Script dash_powerUp_SO;
     [SerializeField] PowerUpSO_Script sonicBoom_powerUp_SO;
@@ -36,10 +40,36 @@ public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
     [SerializeField] Color powerupCharging_color = new Color(0.5f, 0.5f, 0.5f, 0.75f);
     List<Image> icons = new List<Image>();
 
+    [Space(20)]
+    [SerializeField] Animator gameOverUI;
+    [Range(0, 10)]
+    #region Tooltip()
+    [Tooltip("The seconds to wait before the Game Over screen shows")] 
+    #endregion
+    [SerializeField] float secToWaitGameOver = .75f;
+    bool doOnce_gameOver = true;
+
+    [Space(20)]
+    [SerializeField] GameObject playerModel;
+    [Range(0, 100)]
+    [SerializeField] int invAlphaModel = 25;
+    bool isInvincible = false;
+    CustomTimer invTimer = new CustomTimer();
+
+    [Header("—— Feedback ——")]
+    [SerializeField] MusicManager musicManager;
+    [SerializeField] AudioSource damageSfx;
+    [SerializeField] AudioSource deathSfx;
+    [SerializeField] ParticleSystem death_part;
+
 
 
     private void Awake()
     {
+        playerMovScript = FindObjectOfType<PlayerMovemRB>();
+
+
+        //Setting up the Icons
         icons.Add(sonicBoomPowerup_icon);
         icons.Add(dashPowerup_icon);
 
@@ -56,12 +86,28 @@ public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
         }
 
 
+        //Setting up the InvTimer
+
+        invTimer.maxTime = stats_SO.GetInvSec();
+        invTimer.LoopTimer(true);
+
+        invTimer.OnTimerDone_event
+                .AddListener(() => { isInvincible = false; });
+        invTimer.OnTimerDone_event
+                .AddListener(() => ChangeSpaceshipColor(Color.white));
     }
+
 
     void Update()
     {
         //Checks if the player is dead
-        stats_SO.CheckDeath();
+        CheckDeath();
+
+        //---Invincibility Timer---//
+        if (isInvincible)
+        {
+            invTimer.AddTimeToTimer();
+        }
 
 
         #region Changing the UI
@@ -103,13 +149,13 @@ public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
 
 
         //Hides the icons that are not bought yet
-        icons[0].enabled = dash_powerUp_SO.GetIsActive();
-        icons[1].enabled = sonicBoom_powerUp_SO.GetIsActive();
+        icons[0].enabled = sonicBoom_powerUp_SO.GetIsActive();
+        icons[1].enabled = dash_powerUp_SO.GetIsActive();
 
         //Changes the fill amount of the icons
         //to the time remaining on each timer
-        icons[0].fillAmount = RecieveElapsedTimeOnTimer(dash_powerUp_SO.GetTimer());
-        icons[1].fillAmount = RecieveElapsedTimeOnTimer(sonicBoom_powerUp_SO.GetTimer());
+        icons[0].fillAmount = RecieveElapsedTimeOnTimer(sonicBoom_powerUp_SO.GetTimer());
+        icons[1].fillAmount = RecieveElapsedTimeOnTimer(dash_powerUp_SO.GetTimer());
 
         //Changes the charge of all icons
         //(Recharging = gray and semi-transparent)
@@ -141,18 +187,84 @@ public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
     }
 
 
-    public void TakeDamage(float amount)
+    void ChangeSpaceshipColor(Color newColor)
     {
-        stats_SO.RemoveHealth();
-
-
-        #region Feedback
-
-        #endregion
+        playerModel.GetComponent<MeshRenderer>().material.color = newColor;
     }
 
 
-    public void CheckDeath() { }
+
+    #region Damage & Death
+
+    public void TakeDamage(int amount)
+    {
+        if (!isInvincible)    //If the player CAN take damage...
+        {
+            stats_SO.RemoveHealth();
+
+            isInvincible = true;
+            ChangeSpaceshipColor(new Color(1, 1, 1, invAlphaModel));
+
+
+            #region Feedback
+
+            //Plays the audio
+            damageSfx.PlayOneShot(damageSfx.clip);
+
+            #endregion
+        }
+    }
+
+
+    public void CheckDeath()
+    {
+        stats_SO.CheckDeath();
+
+
+        if (stats_SO.GetIsDead())
+        {
+            if (doOnce_gameOver)
+            {
+                #region Feedback
+
+                //Shows the player's death particles
+                death_part.transform.position = playerMovScript.GetRB().position;
+                death_part.Play();
+
+                //Shows the Game Over screen
+                gameOverUI.gameObject.SetActive(true);
+                StartCoroutine(ShowGameOverScreen());
+
+                //Stops the music
+                musicManager.StopCurrentMusic();
+
+                //Plays the death audio
+                deathSfx.Play();
+
+                #endregion
+
+
+                //Removes the spaceship & control from the player
+                mainGameManag.ActivatePlayer(false);
+
+
+                doOnce_gameOver = false;
+            }
+        }
+        else
+        {
+            doOnce_gameOver = true;
+        }
+    }
+
+    IEnumerator ShowGameOverScreen()
+    {
+        yield return new WaitForSeconds(secToWaitGameOver);
+
+        gameOverUI.SetTrigger("Show");
+    }
+
+    #endregion
 
 
     #region EXTRA - Changing the Inspector

@@ -16,10 +16,37 @@ MonoBehaviour:
   generalMixer: {fileID: 24100000, guid: f86522f0e21136e4d880a831ffe8bc23, type: 2}
   audioCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: -80
+      inSlope: 0
+      outSlope: 201.50323
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.09094488
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0.0000111857
+      outSlope: 49.99999
+      tangentMode: 65
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.1
+      value: 5
+      inSlope: 49.99999
+      outSlope: 49.99999
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  musicVolume: 0
-  soundVolume: 0
-  fullscreen: 1
+  musicVolume: 80
+  soundVolume: 30.000002
+  fullscreen: 0

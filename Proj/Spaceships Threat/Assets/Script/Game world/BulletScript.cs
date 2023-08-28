@@ -21,6 +21,7 @@ public class BulletScript : MonoBehaviour
     [Space(20)]
     [Min(1)]
     [SerializeField] float projectileSpeed = 10f;
+    [Min(0)]
     [SerializeField] float projectileLifetime = 5;
     CustomTimer projectileTimer = new CustomTimer();
 
@@ -42,6 +43,8 @@ public class BulletScript : MonoBehaviour
         projectileTimer.maxTime = projectileLifetime;
         projectileTimer.OnTimerDone_event
                        .AddListener(() => RemoveBullet());
+
+        GetComponent<Collider>().isTrigger = true;
     }
 
     private void Update()
@@ -52,7 +55,8 @@ public class BulletScript : MonoBehaviour
     void FixedUpdate()
     {
         //Moves the projectile in the forward direction
-        rb.AddForce(transform.forward * projectileSpeed * 10f, ForceMode.Force);
+        //rb.AddForce(transform.forward * projectileSpeed * 10f, ForceMode.Force);
+        rb.velocity = transform.forward * projectileSpeed * 10f;
 
         #region Speed limit
 
@@ -83,9 +87,9 @@ public class BulletScript : MonoBehaviour
                 #region If the enemy hits the player
 
                 case ProjType_Enum.Enemy:
-                    IPlayer player_check = other?.GetComponent<IPlayer>();
+                    IPlayer playerCheck = other?.GetComponent<IPlayer>();
 
-                    if (player_check != null)
+                    if (playerCheck != null)
                     {
                         damageableObj.TakeDamage(1);    //Damages the player
 
@@ -98,9 +102,9 @@ public class BulletScript : MonoBehaviour
                 #region If the player hits an enemy
 
                 case ProjType_Enum.Player:
-                    IEnemy enemy_check = other.GetComponent<IEnemy>();
+                    IEnemy enemyCheck = other.GetComponent<IEnemy>();
 
-                    if (enemy_check != null)
+                    if (enemyCheck != null)
                     {
                         damageableObj.TakeDamage(1);    //Damages the enemy
 
@@ -110,11 +114,17 @@ public class BulletScript : MonoBehaviour
                 #endregion
 
 
-                #region If the player has used any power-up
-                //TODO: SIstema ^^
+                #region If the player has used the Sonic Boom power-up
 
                 case ProjType_Enum.Special:
-                    //TODO: aggiungere
+                    IEnemy enemyCheck_special = other.GetComponent<IEnemy>();
+
+                    if (enemyCheck_special != null)
+                    {
+                        damageableObj.TakeDamage(5);    //Damages the enemy
+
+                        RemoveBullet();                 //Removes the bullet
+                    }
                     break;
                 #endregion
             }
@@ -126,4 +136,20 @@ public class BulletScript : MonoBehaviour
     {
         poolingScr.ReAddObject(bullet_poolTag, gameObject);
     }
+
+
+    #region EXTRA - Gizmos
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(0, 1, 1, 0.5f);
+        Gizmos.DrawLine(transform.position, transform.position + transform.forward * projectileLifetime * projectileSpeed);
+
+        for (int i = 0; i < 10; i++)
+        {
+            Gizmos.DrawSphere(transform.position + transform.forward * (projectileLifetime * (projectileSpeed / i)), 0.1f);
+        }
+    }
+
+    #endregion
 }

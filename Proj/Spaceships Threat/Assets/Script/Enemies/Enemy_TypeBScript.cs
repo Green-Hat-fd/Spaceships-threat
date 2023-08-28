@@ -2,19 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy_TypeBScript : MonoBehaviour
+public class Enemy_TypeBScript : MonoBehaviour, IEnemy, IDamageable
 {
     ObjectPoolingScript poolingScr;
     [SerializeField] string typeB_tag = "Enemy type B";
+    [SerializeField] string deathPart_tag = "Enemy Death particles";
 
     [Min(0)]
-    [SerializeField] float maxHealth;
-    float health_now;
+    [SerializeField] int maxHealth;
+    int health_now;
     bool isDead = false;
 
 
     [Space(20)]
-    [SerializeField] PlayerMovemRB playerMovScript;
+    PlayerMovemRB playerMovScript;
     [Min(0)]
     [SerializeField] Vector2 changePos_timeRange = new Vector2(10, 15);
     CustomTimer positionTimer = new CustomTimer();
@@ -38,18 +39,27 @@ public class Enemy_TypeBScript : MonoBehaviour
     [SerializeField] int scrapsDroppedWhenDead = 50;
 
 
+    [Header("—— Feedback ——")]
+    [SerializeField] ParticleSystem.MinMaxGradient deathPart_colors = new ParticleSystem
+                                                                          .MinMaxGradient(Color.black, Color.black);
+    ParticleSystem deathTypeB_part;
+
+
 
     private void Awake()
     {
         health_now = maxHealth;
 
+        poolingScr = FindObjectOfType<ObjectPoolingScript>();
         playerMovScript = FindObjectOfType<PlayerMovemRB>();
         
+
         shootTimer.maxTime = fireRate_Seconds;
         //shootTimer.OnTimerDone_event.AddListener(() => _______());
-        /*PickRandomMaxTimeToChangePosition*/ChangePosition();
+        ChangePosition();
         positionTimer.OnTimerDone_event.AddListener(() => ChangePosition());
     }
+
 
     void Update()
     {
@@ -60,6 +70,7 @@ public class Enemy_TypeBScript : MonoBehaviour
 
         if (isInPosition)
         {
+            //---Timer---//
             positionTimer.AddTimeToTimer();
 
             if (positionTimer.CheckIsOver())
@@ -75,14 +86,16 @@ public class Enemy_TypeBScript : MonoBehaviour
     }
 
 
+    #region Change random position
+
     void ChangePosition()
     {
         Vector2 playerBoundaryBox = playerMovScript.GetBoundaryBox();
 
         //Gets a new position to go inside
         //the player boundary box
-        positionToGo = new Vector3(Random.Range(-playerBoundaryBox.x/2, playerBoundaryBox.x/2),
-                                   Random.Range(-playerBoundaryBox.y/2, playerBoundaryBox.y/2),
+        positionToGo = new Vector3(Random.Range(-playerBoundaryBox.x / 2, playerBoundaryBox.x / 2),
+                                   Random.Range(-playerBoundaryBox.y / 2, playerBoundaryBox.y / 2),
                                    transform.position.z);
 
         //Pick a new random time to wait to change position
@@ -96,8 +109,12 @@ public class Enemy_TypeBScript : MonoBehaviour
         positionTimer.maxTime = Random.Range(changePos_timeRange.x, changePos_timeRange.y);
     }
 
+    #endregion
 
-    public void TakeDamage(float amount)
+
+    #region Damage & Death
+
+    public void TakeDamage(int amount)
     {
         health_now -= amount;   //Subtracts the damage amount to the current health
 
@@ -114,11 +131,38 @@ public class Enemy_TypeBScript : MonoBehaviour
             poolingScr.ReAddObject(typeB_tag, gameObject);    //Re-adds the enemy to the pool
 
 
-
             //Adds the scraps to the player
             stats_SO.AddTempScraps(scrapsDroppedWhenDead);
+
+
+
+            #region Feedback
+
+            //Gets the death particle randomly
+            //from the enemies' death part. pool
+            GameObject poolPart = poolingScr.TakeObjectFromPool(deathPart_tag,
+                                                                transform.position,
+                                                                Quaternion.identity);
+            deathTypeB_part = poolPart.GetComponent<ParticleSystem>();
+
+
+            //Changes the death particle's color
+            //to the one of the enemy A
+            //and plays it
+            ParticleSystem.MainModule main_death = deathTypeB_part.main;
+
+            main_death.startColor = new ParticleSystem.MinMaxGradient(deathPart_colors.colorMin,
+                                                                      deathPart_colors.colorMax);
+
+            deathTypeB_part.gameObject.SetActive(true);
+            deathTypeB_part.Play();
+
+            #endregion
         }
     }
+
+    #endregion
+
 
 
     #region EXTRA - Gizmos
@@ -149,6 +193,8 @@ public class Enemy_TypeBScript : MonoBehaviour
         #region UNUSED
         //changePos_timeRange.x = Mathf.Clamp(changePos_timeRange.x, 0, changePos_timeRange.y); 
         #endregion
+
+        deathPart_colors.mode = ParticleSystemGradientMode.TwoColors;
     }
 
     #endregion

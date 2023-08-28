@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: c485bbf6d251c7349a463c1f36bfda01
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - statsSO: {fileID: 11400000, guid: 3c0d96960443953458aa2dd5c2b404c4, type: 2}
+  - enemyManag: {instanceID: 0}
+  - tlStartGame: {instanceID: 0}
+  - menuStars_part: {instanceID: 0}
+  - movingStarts_part: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

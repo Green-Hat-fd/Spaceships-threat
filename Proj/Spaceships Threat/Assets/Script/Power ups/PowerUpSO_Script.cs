@@ -61,9 +61,31 @@ public class PowerUpSO_Script : ScriptableObject
     }
 
 
+    #region Custom Set Functions
+
+    //Load functions
+    public void LoadIsUnlocked(bool value)
+    {
+        isUnlocked = value;
+    }
+    public void LoadIsActive(bool value) 
+    { 
+        isActive = value;
+    }
+
+    public void LoadUpgradeStage(int value) 
+    { 
+        upgradeStage = value;
+    }
+
+    #endregion
+
     #region Custom Get Functions
 
+    public bool GetIsUnlocked() => isUnlocked;
     public bool GetIsActive() => isActive;
+
+    public int GetUpgradeStage() => upgradeStage;
 
     public float GetRechargeTime() => rechargeTime;
 

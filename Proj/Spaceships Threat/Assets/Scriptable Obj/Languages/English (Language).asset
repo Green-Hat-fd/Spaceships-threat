@@ -13,11 +13,29 @@ MonoBehaviour:
   m_Name: English (Language)
   m_EditorClassIdentifier: 
   textsToChange:
-  - tag: t_Start_game
+  - tag: tStartGame
     text: Start to play
-  - tag: t_Options
+  - tag: tOptions
     text: Options
-  - tag: t_Exit
+  - tag: tExit
     text: 'Leave
 
       the game'
+  - tag: tLanguage
+    text: Language
+  - tag: tAudio
+    text: Audio
+  - tag: tMusVol
+    text: Music (volume)
+  - tag: tSfxVol
+    text: Sound Effects (volume)
+  - tag: tFullscreen
+    text: Full-screen
+  - tag: tBack
+    text: < Back
+  - tag: tPauseMenu
+    text: Paused
+  - tag: tResume
+    text: Resume
+  - tag: tMainMenu
+    text: Main Menu

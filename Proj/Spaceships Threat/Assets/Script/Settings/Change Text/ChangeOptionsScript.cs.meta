@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: d84ff73858a5df743b6cd2ded1425229
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - opt_SO: {fileID: 11400000, guid: ea0825216d1d1b7408a2912ffeaa2aef, type: 2}
+  - sl_volMusica: {instanceID: 0}
+  - sl_volSuoni: {instanceID: 0}
+  - dr_lingua: {instanceID: 0}
+  - tg_schermoIntero: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

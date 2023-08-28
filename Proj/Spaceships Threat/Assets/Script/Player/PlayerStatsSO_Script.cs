@@ -13,6 +13,7 @@ public class PlayerStatsSO_Script : ScriptableObject
     [SerializeField] int health;
     [Range(0, 10)]
     [SerializeField] int maxHealth = 3;
+    [SerializeField] float invSec = 3.5f;
 
     [Space(20)]
     #region Tooltip()
@@ -68,38 +69,27 @@ public class PlayerStatsSO_Script : ScriptableObject
         speedMultiplier = 1;
     }
 
+    //Load functions
+    public void LoadAllScraps(int loadNum)
+    {
+        allScraps = loadNum;
+    }
+
     #endregion
 
 
     #region Custom Get functions
 
-    public int GetHealth()
-    {
-        return health;
-    }
-    public int GetMaxHealth()
-    {
-        return maxHealth;
-    }
+    public int GetHealth() => health;
+    public int GetMaxHealth() => maxHealth;
 
-    public bool GetIsDead()
-    {
-        return isDead;
-    }
+    public bool GetIsDead() => isDead;
+    public int GetTempScraps() => scraps_temp;
+    public int GetAllScraps() => allScraps;
 
-    public int GetTempScraps()
-    {
-        return scraps_temp;
-    }
-    public int GetAllScraps()
-    {
-        return allScraps;
-    }
+    public float GetSpeedMultiplier() => speedMultiplier;
 
-    public float GetSpeedMultiplier()
-    {
-        return speedMultiplier;
-    }
+    public float GetInvSec() => invSec;
 
     #endregion
 
@@ -117,9 +107,26 @@ public class PlayerStatsSO_Script : ScriptableObject
     public void ResetPlayerStats()
     {
         health = maxHealth;   //Restores all the health
+        CheckDeath();
 
         allScraps += scraps_temp;   //Adds the collected scraps into the pile...
         scraps_temp = 0;            //...and resets the temporary variable
+
+        ResetSpeedMultiplier();   //Brings back the speed multiplier to 1 (--> 100%)
+    }
+    /// <summary>
+    /// Used when the player starts a new game
+    /// <br></br>(add only a <i>percentage</i> of the scraps)
+    /// </summary>
+    public void ResetPlayerStats(float scrapsPercentage)
+    {
+        health = maxHealth;   //Restores all the health
+        CheckDeath();
+
+        float reducedScraps = scraps_temp * scrapsPercentage;
+
+        allScraps += (int)reducedScraps;    //Adds a part of the collected scraps into the pile...
+        scraps_temp = 0;                    //...and resets the temporary variable
 
         ResetSpeedMultiplier();   //Brings back the speed multiplier to 1 (--> 100%)
     }

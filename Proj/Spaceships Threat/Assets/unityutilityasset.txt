@@ -1,0 +1,26 @@
+# STATS #
+1234567
+
+# POWER-UPS #
+Dash_SO
+True
+True
+0
+Shielding_SO
+False
+False
+0
+Sonic Boom_SO
+False
+False
+0
+Stopwatch_SO
+False
+False
+0
+
+# OPTIONS #
+1
+0,5
+0,8
+False

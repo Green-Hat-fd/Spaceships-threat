@@ -97,7 +97,7 @@ public class ObjectPoolingScript : MonoBehaviour
     /// <summary>
     /// Deactivates all objects inside the pool specified by the <i><b>tag</b></i>
     /// </summary>
-    public void NascondiOgniOggettoDiUnaPool(string poolTag)
+    public void HideEveryObjectOfAPool(string poolTag)
     {
         //Checks if there is an object in the dictionary
         if (poolDict.ContainsKey(poolTag))

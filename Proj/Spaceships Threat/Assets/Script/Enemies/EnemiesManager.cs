@@ -4,22 +4,35 @@ using UnityEngine;
 
 public class EnemiesManager : MonoBehaviour
 {
-    #region All enemies' pools
+    #region All enemies' pool tags
     
-    [SerializeField] ObjectPoolingScript TypeA_pool;
-    [SerializeField] ObjectPoolingScript TypeB_pool;
-    [SerializeField] ObjectPoolingScript TypeC_pool;
-    [SerializeField] ObjectPoolingScript TypeDelta_pool;
-    [SerializeField] ObjectPoolingScript TypeOmega_pool;
+    [SerializeField] string TypeA_pool = "Type A Enemy";
+    [SerializeField] string TypeB_pool = "Type B Enemy";
+    [SerializeField] string TypeC_pool = "Type C Enemy";
+    [SerializeField] string TypeDelta_pool = "Type Delta Enemy";
+    [SerializeField] string TypeOmega_pool = "Type Omega Enemy";
     #endregion
 
     int maxEnemiesOnScreen;
+
+    int typeA_killed,
+        typeB_killed,
+        typeDelta_killed,
+        typeOmega_killed,
+        maxKilled;
     
 
 
     void Update()
     {
-        
+
+
+
+        //Updates the "max enemy kill" counter
+        maxKilled = typeA_killed
+                    + typeB_killed
+                    + typeDelta_killed
+                    + typeOmega_killed;
     }
 
 
@@ -39,6 +52,23 @@ public class EnemiesManager : MonoBehaviour
     public void SetMaxEnemiesOnScreen(int newMax)
     {
         maxEnemiesOnScreen = newMax;
+    }
+
+    public void AddKillTypeA()
+    {
+        typeA_killed++;
+    }
+    public void AddKillTypeB()
+    {
+        typeB_killed++;
+    }
+    public void AddKillTypeDelta()
+    {
+        typeDelta_killed++;
+    }
+    public void AddKillTypeOmega()
+    {
+        typeOmega_killed++;
     }
 
     #endregion

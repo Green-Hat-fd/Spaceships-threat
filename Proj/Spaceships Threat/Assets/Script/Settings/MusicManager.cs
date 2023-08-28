@@ -45,6 +45,11 @@ public class MusicManager : MonoBehaviour
         playingNowPlaylist = allPlaylists[playlistIndex];
     }
 
+    public void StopCurrentMusic()
+    {
+        playingNowPlaylist.StopAllMusic();
+    }
+
 
     #region EXTRA - Changing the Inspector
 

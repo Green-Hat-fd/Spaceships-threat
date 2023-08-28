@@ -12,4 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a297159aee822347ba650544927521b, type: 3}
   m_Name: Italian (Language)
   m_EditorClassIdentifier: 
-  textsToChange: []
+  textsToChange:
+  - tag: tStartGame
+    text: Inizia a giocare
+  - tag: tOptions
+    text: Opzioni
+  - tag: tExit
+    text: 'Lascia
+
+      il gioco'
+  - tag: tLanguage
+    text: Lingua
+  - tag: tAudio
+    text: Audio
+  - tag: tMusVol
+    text: Musica
+  - tag: tSfxVol
+    text: Effetti sonori
+  - tag: tFullscreen
+    text: Schermo intero
+  - tag: tBack
+    text: < Indietro
+  - tag: tPauseMenu
+    text: In Pausa
+  - tag: tResume
+    text: Riprendi
+  - tag: tMainMenu
+    text: Menu Principale

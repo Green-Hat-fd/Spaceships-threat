@@ -13,6 +13,11 @@ public class DashPowerUp : MonoBehaviour
     [SerializeField] float distanceToDash;
     Vector3 playerMovem;
 
+    [Header("—— Feedback ——")]
+    [SerializeField] ParticleSystem dashEffect_partA,
+                                    dashEffect_partB,
+                                    dashEffect_partC;
+
 
 
     void Update()
@@ -51,20 +56,36 @@ public class DashPowerUp : MonoBehaviour
 
     void ActivateDashPowerUp()
     {
-        //Calculates the next 
-        Vector3 vectToMove = movemScript.GetRB().position
+        Vector3 oldPos = movemScript.GetRB().position;    //Used for the particle later
+
+        //Calculates the next position to move
+        Vector3 posToMove = movemScript.GetRB().position
                               +
                              playerMovem * distanceToDash;
 
         //Limits the new "dash position" inside the boundary box
-        vectToMove = movemScript.LimitInsideBoundaryBox(vectToMove);
+        posToMove = movemScript.LimitInsideBoundaryBox(posToMove);
 
         //Moves the player in the new "dash position"
-        movemScript.GetRB().MovePosition(vectToMove);
+        movemScript.GetRB().MovePosition(posToMove);
+
 
         #region Animations
 
+        Vector3 halfPos = Vector3.Lerp(oldPos, posToMove, 0.5f);
+
+        //Creates the particle on the old, new and half position
+        MoveAndPlayParticleEffect(dashEffect_partA, oldPos);
+        MoveAndPlayParticleEffect(dashEffect_partB, halfPos);
+        MoveAndPlayParticleEffect(dashEffect_partC, posToMove);
+
         #endregion
+    }
+
+    void MoveAndPlayParticleEffect(ParticleSystem particle, Vector3 positionToMove)
+    {
+        particle.transform.position = positionToMove;
+        particle.Play();
     }
 
 
