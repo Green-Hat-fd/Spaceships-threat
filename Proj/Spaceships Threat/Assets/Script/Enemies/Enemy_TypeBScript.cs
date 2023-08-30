@@ -9,7 +9,7 @@ public class Enemy_TypeBScript : MonoBehaviour, IEnemy, IDamageable
     [SerializeField] string deathPart_tag = "Enemy Death particles";
 
     [Min(0)]
-    [SerializeField] int maxHealth;
+    [SerializeField] int maxHealth = 10;
     int health_now;
     bool isDead = false;
 
@@ -40,8 +40,9 @@ public class Enemy_TypeBScript : MonoBehaviour, IEnemy, IDamageable
 
 
     [Header("—— Feedback ——")]
-    [SerializeField] ParticleSystem.MinMaxGradient deathPart_colors = new ParticleSystem
-                                                                          .MinMaxGradient(Color.black, Color.black);
+    [SerializeField] ParticleSystem
+                     .MinMaxGradient deathPart_colors = new ParticleSystem
+                                                            .MinMaxGradient(Color.black, Color.black);
     ParticleSystem deathTypeB_part;
 
 
@@ -83,6 +84,11 @@ public class Enemy_TypeBScript : MonoBehaviour, IEnemy, IDamageable
                                                      positionToGo,
                                                      Time.deltaTime * movingVelocity);
         }
+    }
+
+    void SetActiveGuns(bool value)
+    {
+
     }
 
 
@@ -147,7 +153,7 @@ public class Enemy_TypeBScript : MonoBehaviour, IEnemy, IDamageable
 
 
             //Changes the death particle's color
-            //to the one of the enemy A
+            //to the one of the enemy
             //and plays it
             ParticleSystem.MainModule main_death = deathTypeB_part.main;
 

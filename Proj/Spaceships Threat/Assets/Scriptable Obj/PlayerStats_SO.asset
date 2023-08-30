@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDead: 0
   health: 6
+  maxHealth_min: 3
   maxHealth: 6
   invSec: 3.5
   scraps_temp: 0
-  allScraps: 1234567
+  allScraps: 100000
   DEBUG: 0
   powerDownTime: 0
   powerDownGet: 

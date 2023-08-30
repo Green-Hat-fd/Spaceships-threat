@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: b135517293c7f954899775302dab9bb2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - stats_SO: {fileID: 11400000, guid: 3c0d96960443953458aa2dd5c2b404c4, type: 2}
+  - sonicBoom_SO: {fileID: 11400000, guid: aa0987eaf3f3e614b8298341a6a32810, type: 2}
+  - dash_SO: {fileID: 11400000, guid: 3c86c6f78cffb9e4da1c8c344a95d5fd, type: 2}
+  - shielding_SO: {fileID: 11400000, guid: 7675d06772a0bca4fa963f9a68a70a26, type: 2}
+  - stopwatch_SO: {fileID: 11400000, guid: 1a1f3181f63bb51498936f1c2a63aa2a, type: 2}
+  - priceTxt_sonicBoom: {instanceID: 0}
+  - priceTxt_dash: {instanceID: 0}
+  - priceTxt_shielding: {instanceID: 0}
+  - priceTxt_stopwatch: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

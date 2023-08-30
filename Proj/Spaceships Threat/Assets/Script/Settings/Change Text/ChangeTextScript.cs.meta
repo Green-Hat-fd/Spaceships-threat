@@ -4,7 +4,7 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - optionsSO: {fileID: 11400000, guid: ea0825216d1d1b7408a2912ffeaa2aef, type: 2}
+  - opt_SO: {fileID: 11400000, guid: ea0825216d1d1b7408a2912ffeaa2aef, type: 2}
   - english: {fileID: 11400000, guid: aa3aa9cfa4bbd0e468f7b9a0d0bf5e66, type: 2}
   - italian: {fileID: 11400000, guid: 519f54b0dbd7f9d43bb1e8f6a51480bb, type: 2}
   executionOrder: 0

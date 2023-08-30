@@ -19,17 +19,17 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: -80
+      value: -60
       inSlope: 0
-      outSlope: 201.50323
+      outSlope: 172.1226
       tangentMode: 1
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.09094488
+      outWeight: 0.11259842
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: 0.0000111857
+      inSlope: 0.06792399
       outSlope: 49.99999
       tangentMode: 65
       weightedMode: 0
@@ -47,6 +47,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  musicVolume: 80
-  soundVolume: 30.000002
+  musicVolume: 100
+  soundVolume: 80
   fullscreen: 0

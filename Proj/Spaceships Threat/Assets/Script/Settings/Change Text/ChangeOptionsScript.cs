@@ -18,13 +18,14 @@ public class ChangeOptionsScript : MonoBehaviour
 
     public void UpdateOptions()
     {
-        sl_musVolume.value = opt_SO.GetMusicVolume_Percent() * 10;
-        sl_sfxVolume.value = opt_SO.GetSoundVolume_Percent() * 10;
+        sl_musVolume.SetValueWithoutNotify(opt_SO.GetMusicVolume_Percent() * 10);
+        sl_sfxVolume.SetValueWithoutNotify(opt_SO.GetSoundVolume_Percent() * 10);
         opt_SO.ChangeMusicVolumeTen(sl_musVolume.value);
         opt_SO.ChangeSoundVolumeTen(sl_sfxVolume.value);
 
-        dr_language.value = (int)opt_SO.GetChosenLanguage();
+        dr_language.SetValueWithoutNotify((int)opt_SO.GetChosenLanguage());
+        opt_SO.ChangeLanguage(opt_SO.GetChosenLanguage());
 
-        tg_fullscreen.isOn = Screen.fullScreen;
+        tg_fullscreen.SetIsOnWithoutNotify(Screen.fullScreen);
     }
 }

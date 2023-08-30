@@ -6,21 +6,19 @@ using UnityEngine.Playables;
 
 public class MainGameManager : MonoBehaviour
 {
-    [SerializeField] PlayerStatsSO_Script statsSO;
+    [SerializeField] PlayerStatsSO_Script stats_SO;
+    ObjectPoolingScript poolingScr;
 
     [Header("—— Managers & UIs ——")]
     [SerializeField] SaveManager saveManager;
     [SerializeField] ChangeOptionsScript changeOptScript;
     [SerializeField] EnemiesManager enemyManager;
 
-    [SerializeField] Canvas _mainGameUI;
-    [SerializeField] Canvas _gameOverUI,
-                            _mainMenuUI,
-                            _optionsUI;
-    GameObject mainGameUI_obj,
-               gameOverUI_obj,
-               mainMenuUI_obj,
-               optionsUI_obj;
+    [SerializeField] Canvas mainGameUI;
+    [SerializeField] Canvas gameOverUI,
+                            mainMenuUI,
+                            powerUpsUI,
+                            optionsUI;
     [SerializeField] GameObject mainMenuObjects;
 
     [Header("—— Objects and Scripts to activate/enable ——")]
@@ -42,19 +40,20 @@ public class MainGameManager : MonoBehaviour
     [SerializeField] ParticleSystem movingStarts_part;
     [SerializeField] ParticleSystem playerDeathPart;
 
+    bool isPlayerPlaying = false; 
+
+
 
 
     void Awake()
     {
         musicManager = FindObjectOfType<MusicManager>();
-        mainMenuUI_obj = _mainMenuUI.gameObject;
-        mainGameUI_obj = _mainGameUI.gameObject;
-        optionsUI_obj = _optionsUI.gameObject;
-        gameOverUI_obj = _gameOverUI.gameObject;
+        poolingScr = FindObjectOfType<ObjectPoolingScript>();
 
         saveManager.LoadGame();             //Loads the game from the save file
 
         _ReturnToMainMenu();
+        changeOptScript.UpdateOptions();
     }
 
 
@@ -73,7 +72,12 @@ public class MainGameManager : MonoBehaviour
         }
 
         statsManager.transform.localPosition = Vector3.zero;    //Reset the player's position
+
+        isPlayerPlaying = value;    //Set the playing state
     }
+
+
+    public bool GetIsPlayerPlaying() => isPlayerPlaying;
 
     #endregion
 
@@ -83,10 +87,10 @@ public class MainGameManager : MonoBehaviour
 
     public void FirstSetup()
     {
-        statsSO.ResetPlayerStats();
+        stats_SO.ResetPlayerStats();
         
 
-        gameOverUI_obj.SetActive(false);    //Hides the Game Over screen
+        gameOverUI.gameObject.SetActive(false);    //Hides the Game Over screen
     }
     public void StartGame()
     {
@@ -126,25 +130,27 @@ public class MainGameManager : MonoBehaviour
         musicManager.ChangeMusicPlaylist(mainMenuMusicIndex);
 
         //Activates all the menus and objects
-        optionsUI_obj.SetActive(true);
+        powerUpsUI.gameObject.SetActive(true);
         mainMenuObjects.SetActive(true);
-        mainMenuUI_obj.SetActive(true);
-        mainMenuUI_obj.GetComponent<Animator>().SetTrigger("Show");
+        mainMenuUI.gameObject.SetActive(true);
+        mainMenuUI.GetComponent<Animator>().SetTrigger("Visible");
+        optionsUI.gameObject.SetActive(true);
+        optionsUI.GetComponent<Animator>().SetTrigger("Visible");
     }
 
     public void ReturnToMainMenuFromDeath()
     {
         //Hides the Game Over screen & the game HUD
-        mainGameUI_obj.SetActive(false);
-        gameOverUI_obj.SetActive(false);
-        gameOverUI_obj.GetComponent<Animator>().SetTrigger("Hide");
+        mainGameUI.gameObject.SetActive(false);
+        gameOverUI.gameObject.SetActive(false);
+        gameOverUI.GetComponent<Animator>().SetTrigger("Hidden");
 
         //Hides the death particles
         playerDeathPart.Stop();
 
         //Adds the temporary Scraps
         //to the max collected Scraps
-        statsSO.ResetPlayerStats();
+        stats_SO.ResetPlayerStats();
 
         //Saves the game
         saveManager.SaveGame();
@@ -158,10 +164,20 @@ public class MainGameManager : MonoBehaviour
     {
         //Adds only a percentage of the temporary Scraps
         //to the max collected Scraps
-        statsSO.ResetPlayerStats(scrapsFromPausePercent);
+        stats_SO.ResetPlayerStats(scrapsFromPausePercent);
 
         //Saves the game
         saveManager.SaveGame();
+
+
+        //Removes all the entities
+        poolingScr.HideEveryPool();
+
+        //Deactivates all game menus
+        mainGameUI.gameObject.SetActive(false);
+
+        //Unfreezes the time
+        Time.timeScale = 1;
 
 
 

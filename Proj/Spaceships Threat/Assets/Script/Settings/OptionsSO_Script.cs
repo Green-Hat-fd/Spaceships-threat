@@ -35,33 +35,6 @@ public class OptionsSO_Script : ScriptableObject
 
         SceneManager.LoadSceneAsync(--scenaNow);
     }
-    public void CaricaUltimaScena()
-    {
-        //int scenaDaCheckpoint = checkpointSO.LeggiLivello();
-        //int numeroCheckpoint = checkpointSO.LeggiNumCheckpoint();
-
-        ////Carica l'ultima scena se si ha giocato al gioco, se no ricomincia dalla prima
-        //if (scenaDaCheckpoint <= 0 || numeroCheckpoint >= 999)
-        //{
-        //    ResetTutto();
-        //    NextScene();
-        //}
-        //else
-        //    ScenaScelta(scenaDaCheckpoint);
-
-        //ascensSO.ScriviDaDoveCambioScena(CambioScena_Enum.DaMenuPrincipale);
-        //ascensSO.ScriviPossoMettereInPausa(true);
-    }
-    void ResetTutto()
-    {
-        //TODO: reset livello
-
-        //checkpointSO.CambiaCheckpoint(-1, 0, Vector3.zero);
-        //rumSO.ResetNumBevute();
-        //rumSO.PossoBereDiNuovo();
-        //rumSO.DisattivaPoteriRum();
-        //rumSO.CambiaRumRaccolto(false);
-    }
 
     #endregion
 

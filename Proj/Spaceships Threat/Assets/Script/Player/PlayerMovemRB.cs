@@ -5,10 +5,9 @@ using UnityEngine;
 public class PlayerMovemRB : MonoBehaviour, IPlayer
 {
     InputManager.PlayerActions PlayerInput;
-    InputManager.GeneralActions GeneralInput;
 
     GameObject spaceshipToMove;
-    [SerializeField] PlayerStatsSO_Script statsSO;
+    [SerializeField] PlayerStatsSO_Script stats_SO;
     [SerializeField] Rigidbody rb;
 
     [Space(10)]
@@ -52,7 +51,6 @@ public class PlayerMovemRB : MonoBehaviour, IPlayer
     private void Update()
     {
         PlayerInput = GameManager.inst.inputManager.Player;
-        GeneralInput = GameManager.inst.inputManager.General;
 
         //Takes the axes from the movement input
         xMovement = PlayerInput.Movement.ReadValue<Vector2>().x;
@@ -89,7 +87,7 @@ public class PlayerMovemRB : MonoBehaviour, IPlayer
     {
         Vector3 forceVect = moveVect.normalized * playerVelocity;
         forceVect *= 10f;
-        forceVect *= statsSO.GetSpeedMultiplier();
+        forceVect *= stats_SO.GetSpeedMultiplier();
 
         //(Simple) Horizontal player movement
         rb.AddForce(forceVect, ForceMode.Force);

@@ -5,7 +5,7 @@ using TMPro;
 
 public class ChangeNumberTextScript : MonoBehaviour
 {
-    [SerializeField] OptionsSO_Script optionsSO;
+    [SerializeField] OptionsSO_Script options_SO;
 
     TMP_Text textToChange;
 

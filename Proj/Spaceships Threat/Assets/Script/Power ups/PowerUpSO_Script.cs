@@ -6,13 +6,13 @@ using UnityEngine;
 public class PowerUpSO_Script : ScriptableObject
 {
     #region Tooltip()
-    [Tooltip("If the power-up is \"grayed out\" \nand cannot be bought \n\t(when false)")]
-    #endregion
-    [SerializeField] bool isUnlocked = true;
-    #region Tooltip()
-    [Tooltip("If the power-up is unlocked \nbut hasn't been bought yet \n\t(when false)")]
+    [Tooltip("When false - the power-up is \"grayed out\" \nand cannot be bought")]
     #endregion
     [SerializeField] bool isActive = true;
+    #region Tooltip()
+    [Tooltip("If the power-up has been bought or not")]
+    #endregion
+    [SerializeField] bool isUnlocked = true;
 
     [Header("—— Prices ——")]
     [SerializeField] int basePrice;
@@ -60,17 +60,38 @@ public class PowerUpSO_Script : ScriptableObject
         timer.maxTime = rechargeTime;
     }
 
+    /// <summary>
+    /// Adds 1 to the "upgrade stage" & Updates the price
+    /// </summary>
+    public void AddUpgradeStage()
+    {
+        upgradeStage++;
+
+        UpdatePrice();
+    }
+
 
     #region Custom Set Functions
 
-    //Load functions
-    public void LoadIsUnlocked(bool value)
+    public void SetIsActive(bool value)
+    {
+        isActive = value;
+    }
+
+    public void SetIsUnlocked(bool value)
     {
         isUnlocked = value;
     }
+
+
+    //Load functions
     public void LoadIsActive(bool value) 
     { 
         isActive = value;
+    }
+    public void LoadIsUnlocked(bool value)
+    {
+        isUnlocked = value;
     }
 
     public void LoadUpgradeStage(int value) 
@@ -82,8 +103,10 @@ public class PowerUpSO_Script : ScriptableObject
 
     #region Custom Get Functions
 
-    public bool GetIsUnlocked() => isUnlocked;
     public bool GetIsActive() => isActive;
+    public bool GetIsUnlocked() => isUnlocked;
+
+    public int GetPriceNow() => priceNow;
 
     public int GetUpgradeStage() => upgradeStage;
 

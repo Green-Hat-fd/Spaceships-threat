@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82c898e260a27714295916825d1e5932, type: 3}
   m_Name: Stopwatch_SO
   m_EditorClassIdentifier: 
-  isUnlocked: 0
+  canBeBought: 0
   isActive: 0
+  isUnlocked: 0
   basePrice: 1500
-  priceNow: 0
+  priceNow: 1500
   priceAddedCurve:
     serializedVersion: 2
     m_Curve:
@@ -43,4 +44,4 @@ MonoBehaviour:
   upgradeStage: 0
   maxUpgradeStages: 3
   isRechargable: 0
-  rechargeTime: 0
+  rechargeTime: NaN

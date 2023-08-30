@@ -39,3 +39,26 @@ MonoBehaviour:
     text: Resume
   - tag: tMainMenu
     text: Main Menu
+  - tag: tPause_Warning
+    text: 'Are you sure you want to return to the Main Menu?
+
+      (You''ll get
+      only 25% of your collected Scraps)'
+  - tag: tYes
+    text: Yes
+  - tag: tNo
+    text: No
+  - tag: tPowerUp
+    text: Power-Up
+  - tag: tSonicBoom_PU
+    text: Sonic Boom
+  - tag: tDash_PU
+    text: Dash
+  - tag: tShielding_PU
+    text: Shielding
+  - tag: tStopwatch_PU
+    text: Stopwatch
+  - tag: tBuy_PU
+    text: Buy
+  - tag: tUpgrade_PU
+    text: Upgrade

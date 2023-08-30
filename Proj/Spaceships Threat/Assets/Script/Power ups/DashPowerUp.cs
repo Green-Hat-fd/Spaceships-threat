@@ -26,10 +26,10 @@ public class DashPowerUp : MonoBehaviour
         
         //---Timer---//
         dash_SO.UpdateTimer();
-        if (dash_SO.GetIsActive())
+        if (dash_SO.GetIsUnlocked())
         {
-            //Makes the timer run only                                         
-            //if the power-up it's active
+            //Makes the timer run only
+            //if the power-up it has been bought
             dash_SO.GetTimer().AddTimeToTimer();
         }
 
@@ -38,7 +38,7 @@ public class DashPowerUp : MonoBehaviour
         playerMovem = PlayerInput.Movement.ReadValue<Vector2>();
 
         //All checks happening before the power-up get used
-        bool isDashActive = dash_SO.GetIsActive();
+        bool isDashUnlocked = dash_SO.GetIsUnlocked();
         bool isFullyCharged = dash_SO.GetTimer().CheckIsOver();
         bool isActionButtonPressed = PlayerInput.Dash.triggered;
         bool isPlayerMoving = playerMovem != Vector3.zero;
@@ -46,7 +46,7 @@ public class DashPowerUp : MonoBehaviour
         //Checks if the Dash power is ready to use
         //(has been bought and it's charged)
         // + if the player has pressed the action button
-        if(isActionButtonPressed && isDashActive && isFullyCharged && isPlayerMoving)
+        if(isActionButtonPressed && isDashUnlocked && isFullyCharged && isPlayerMoving)
         {
             ActivateDashPowerUp();
 

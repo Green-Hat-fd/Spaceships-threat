@@ -12,7 +12,9 @@ public class PlayerStatsSO_Script : ScriptableObject
     [Range(0, 10)]
     [SerializeField] int health;
     [Range(0, 10)]
-    [SerializeField] int maxHealth = 3;
+    [SerializeField] int maxHealth_min = 3;
+    [Range(0, 10)]
+    [SerializeField] int maxHealth = 6;
     [SerializeField] float invSec = 3.5f;
 
     [Space(20)]
@@ -33,7 +35,7 @@ public class PlayerStatsSO_Script : ScriptableObject
     [Tooltip("The duration of each power-down")]
     #endregion
     [SerializeField] float powerDownTime = 15f;
-    [SerializeField] List<int> powerDownGet;        //SISTEMA
+    [SerializeField] List<int> powerDownGet;        //TODO: SISTEMA
 
     [Header("—— Modifiers ——")]
     #region Tooltip()
@@ -54,10 +56,21 @@ public class PlayerStatsSO_Script : ScriptableObject
     {
         health++;
     }
+    public void AddMaxHealth(int amountToAdd)
+    {
+        if (maxHealth >= maxHealth_min)
+        {
+            maxHealth += amountToAdd;
+        }
+    }
 
     public void AddTempScraps(int amountToAdd)
     {
         scraps_temp += amountToAdd;
+    }
+    public void RemoveAllScraps(int amountToRemove)
+    {
+        allScraps -= amountToRemove;
     }
 
     public void SetSpeedMultiplier(float newValue)
@@ -139,6 +152,7 @@ public class PlayerStatsSO_Script : ScriptableObject
         //Clamps all values of all the player stats
         //to always be positive
         health = Mathf.Clamp(health, 0, maxHealth);         // & below or equal to "maxHealth"
+        maxHealth_min = Mathf.Clamp(maxHealth_min, 0, maxHealth);
         maxHealth = Mathf.Clamp(maxHealth, 0, maxHealth);
         speedMultiplier = Mathf.Clamp(speedMultiplier, 0, speedMultiplier);
     }

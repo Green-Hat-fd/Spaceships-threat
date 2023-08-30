@@ -12,7 +12,7 @@ public class ChangeTextScript : MonoBehaviour
     [SerializeField] string tagToSearch;
 
     [Space(10)]
-    [SerializeField] OptionsSO_Script optionsSO;
+    [SerializeField] OptionsSO_Script opt_SO;
 
     [Header("—— Languages (Scriptable Obj.) ——")]
     [SerializeField] LanguageSO_Script english;
@@ -44,7 +44,7 @@ public class ChangeTextScript : MonoBehaviour
         LanguageSO_Script chosenTextLanguageSO = default;
 
         //Takes the Scriptable Obj. relative to the chosen language
-        switch (optionsSO.GetChosenLanguage())
+        switch (opt_SO.GetChosenLanguage())
         {
             #region Inglese
 

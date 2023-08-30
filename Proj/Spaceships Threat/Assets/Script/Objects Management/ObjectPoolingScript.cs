@@ -113,6 +113,26 @@ public class ObjectPoolingScript : MonoBehaviour
     }
 
     /// <summary>
+    /// Deactivates all objects inside <i>all</i> pools
+    /// </summary>
+    public void HideEveryPool()
+    {
+        //Checks for every queue in the dictionary
+        foreach (var queue in poolDict.Values)
+        {
+            var list = queue.ToArray();   //Turns it into an array
+
+            //For each objects in the pool...
+            foreach(GameObject obj in list)
+            {
+                obj.SetActive(false);   //Deactivates it
+
+                queue.Enqueue(obj);   //Enqueues it
+            }
+        }
+    }
+
+    /// <summary>
     /// Resets the Rigidbody's velocity of the object & all of its children
     /// </summary>
     public static void ResetAllRigidBodies(GameObject objToReset)

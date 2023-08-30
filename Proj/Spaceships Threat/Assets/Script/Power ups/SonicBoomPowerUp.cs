@@ -13,6 +13,9 @@ public class SonicBoomPowerUp : MonoBehaviour
     [Space(20)]
     [SerializeField] float sonicBoomDamage;
 
+    [Header("—— Feedback ——")]
+    [SerializeField] AudioSource sonicBoomSfx;
+
 
 
     private void Awake()
@@ -31,24 +34,24 @@ public class SonicBoomPowerUp : MonoBehaviour
 
         //---Timer---//
         sonicBoom_SO.UpdateTimer();
-        if (sonicBoom_SO.GetIsActive())
+        if (sonicBoom_SO.GetIsUnlocked())
         {
-            //Makes the timer run only                                         
-            //if the power-up it's active
+            //Makes the timer run only
+            //if the power-up it has been bought
             sonicBoom_SO.GetTimer().AddTimeToTimer();
         }
 
 
 
         //All checks happening before the power-up get used
-        bool isDashActive = sonicBoom_SO.GetIsActive();
+        bool isSonicBoomUnlocked = sonicBoom_SO.GetIsUnlocked();
         bool isFullyCharged = sonicBoom_SO.GetTimer().CheckIsOver();
         bool isActionButtonPressed = PlayerInput.SonicBoom.triggered;
 
         //Checks if the Sonic Boom power is ready to use
         //(has been bought and it's charged)
         // + if the player has pressed the action button
-        if (isActionButtonPressed && isDashActive && isFullyCharged)
+        if (isActionButtonPressed && isSonicBoomUnlocked && isFullyCharged)
         {
             ActivateSonicBoomPowerUp();
 
@@ -65,7 +68,10 @@ public class SonicBoomPowerUp : MonoBehaviour
         cursorManager.ChangeCursor_Default();
 
 
-        #region Animations
+        #region Feedback
+
+        //Plays the sound
+        sonicBoomSfx.Play();
 
         #endregion
     }

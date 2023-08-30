@@ -51,6 +51,14 @@ public class MusicManager : MonoBehaviour
     }
 
 
+    #region Custom Get functions
+
+    public MusicPlaylist GetCurrentMusic() => playingNowPlaylist;
+    public AudioSource GetAudioSourceCurrentMusic() => playingNowPlaylist.GetComponent<AudioSource>();
+
+    #endregion
+
+
     #region EXTRA - Changing the Inspector
 
     private void OnValidate()

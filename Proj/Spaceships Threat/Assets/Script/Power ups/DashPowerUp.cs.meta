@@ -3,7 +3,12 @@ guid: ddf12921c2b5fef4db6bd2fb944e35a7
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - dash_SO: {fileID: 11400000, guid: 3c86c6f78cffb9e4da1c8c344a95d5fd, type: 2}
+  - movemScript: {instanceID: 0}
+  - dashEffect_partA: {instanceID: 0}
+  - dashEffect_partB: {instanceID: 0}
+  - dashEffect_partC: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

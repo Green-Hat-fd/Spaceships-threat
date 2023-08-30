@@ -39,3 +39,26 @@ MonoBehaviour:
     text: Riprendi
   - tag: tMainMenu
     text: Menu Principale
+  - tag: tPause_Warning
+    text: 'Sei sicuro di voler tornare al Menu Principale?
+
+      (Riceverai solo
+      il 25% dei Rottami collezionati)'
+  - tag: tYes
+    text: "S\xEC"
+  - tag: tNo
+    text: No
+  - tag: tPowerUp
+    text: Potenziati
+  - tag: tSonicBoom_PU
+    text: Boato Sonico
+  - tag: tDash_PU
+    text: Scatto
+  - tag: tShielding_PU
+    text: Schermaggio
+  - tag: tStopwatch_PU
+    text: Cronometro
+  - tag: tBuy_PU
+    text: Compra
+  - tag: tUpgrade_PU
+    text: Migliora

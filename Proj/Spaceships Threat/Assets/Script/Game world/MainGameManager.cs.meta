@@ -4,11 +4,21 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - statsSO: {fileID: 11400000, guid: 3c0d96960443953458aa2dd5c2b404c4, type: 2}
-  - enemyManag: {instanceID: 0}
-  - tlStartGame: {instanceID: 0}
+  - stats_SO: {fileID: 11400000, guid: 3c0d96960443953458aa2dd5c2b404c4, type: 2}
+  - saveManager: {instanceID: 0}
+  - changeOptScript: {instanceID: 0}
+  - enemyManager: {instanceID: 0}
+  - mainGameUI: {instanceID: 0}
+  - gameOverUI: {instanceID: 0}
+  - mainMenuUI: {instanceID: 0}
+  - powerUpsUI: {instanceID: 0}
+  - optionsUI: {instanceID: 0}
+  - mainMenuObjects: {instanceID: 0}
+  - statsManager: {instanceID: 0}
+  - musicManager: {instanceID: 0}
   - menuStars_part: {instanceID: 0}
   - movingStarts_part: {instanceID: 0}
+  - playerDeathPart: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

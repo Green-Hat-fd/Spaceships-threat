@@ -110,6 +110,27 @@ public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
         }
 
 
+        #region Shielding Power-up 
+
+        //Adds extra/bonus hearts at the player's max health
+        //when it has been bought
+        if (shielding_powerUp_SO.GetIsUnlocked())
+        {
+            stats_SO.AddMaxHealth(shielding_powerUp_SO.GetUpgradeStage());
+        }
+
+        #endregion
+
+
+        #region Stopwatch Power-up 
+
+        //-----------------------------TODO: scrivi qui che cosa fa...
+        //when it has been bought
+
+        #endregion
+
+
+
         #region Changing the UI
 
         //For each image in the health bar...
@@ -149,8 +170,8 @@ public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
 
 
         //Hides the icons that are not bought yet
-        icons[0].enabled = sonicBoom_powerUp_SO.GetIsActive();
-        icons[1].enabled = dash_powerUp_SO.GetIsActive();
+        icons[0].enabled = sonicBoom_powerUp_SO.GetIsUnlocked();
+        icons[1].enabled = dash_powerUp_SO.GetIsUnlocked();
 
         //Changes the fill amount of the icons
         //to the time remaining on each timer

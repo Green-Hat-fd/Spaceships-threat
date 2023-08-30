@@ -1,10 +1,10 @@
 # STATS #
-1234567
+1000000
 
 # POWER-UPS #
 Dash_SO
 True
-True
+False
 0
 Shielding_SO
 False
@@ -21,6 +21,12 @@ False
 
 # OPTIONS #
 1
-0,5
+1
 0,8
 False
+
+
+
+
+
+1234567

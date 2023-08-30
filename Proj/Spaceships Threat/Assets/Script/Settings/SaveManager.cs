@@ -9,7 +9,7 @@ public class SaveManager : MonoBehaviour
 
     [Header("—— Information variables ——")]
     [SerializeField] PlayerStatsSO_Script statsSO;
-    [SerializeField] OptionsSO_Script optionsSO;
+    [SerializeField] OptionsSO_Script opt_SO;
     [SerializeField] List<PowerUpSO_Script> all_powerUpsSO;
 
     [Space(20)]
@@ -51,8 +51,8 @@ public class SaveManager : MonoBehaviour
         foreach (var powerUp in all_powerUpsSO)
         {
             saveString += powerUp.name + "\n"
-                          + powerUp.GetIsUnlocked() + "\n"
                           + powerUp.GetIsActive() + "\n"
+                          + powerUp.GetIsUnlocked() + "\n"
                           + powerUp.GetUpgradeStage() + "\n";
         }
 
@@ -64,10 +64,10 @@ public class SaveManager : MonoBehaviour
         saveString += "\n" + OPTIONS_TITLE + "\n";
 
         //Adds all the chosen options
-        saveString += (int)optionsSO.GetChosenLanguage() + "\n";
-        saveString += optionsSO.GetMusicVolume_Percent() + "\n";
-        saveString += optionsSO.GetSoundVolume_Percent() + "\n";
-        saveString += optionsSO.GetIsFullscreen() + "\n";
+        saveString += (int)opt_SO.GetChosenLanguage() + "\n";
+        saveString += opt_SO.GetMusicVolume_Percent() + "\n";
+        saveString += opt_SO.GetSoundVolume_Percent() + "\n";
+        saveString += opt_SO.GetIsFullscreen() + "\n";
 
         #endregion
 
@@ -84,12 +84,12 @@ public class SaveManager : MonoBehaviour
         //  2:  
         //  3:  ### POWER-UPS ###
         //  4:  Name (sonic boom)
-        //  5:  - Is Unlocked
-        //  6:  - Is Active
+        //  5:  - Is Active
+        //  6:  - Is Unlocked
         //  7:  - Upgrade stage
         //  8:  Name (shielding)
-        //  9:  - Is Unlocked
-        // 10:  - Is Active
+        //  9:  - Is Active
+        // 10:  - Is Unlocked
         // 11:  - Upgrade stage
         // 12:  Name (dash)
         // 13:  - Is Unlocked
@@ -169,14 +169,18 @@ public class SaveManager : MonoBehaviour
         {
             //Turns from string to int for each power-up's name
             int i_powerupName = i_powerups + (4 * i) + 1;
+            
+            /* 
+             * 4 ---> the lines' skip amount (for each power-up section)
+             */
 
             //Takes the corresponding numbers
-            bool unlocked_load = bool.Parse(fileReading[i_powerupName + 1]),
-                 active_load = bool.Parse(fileReading[i_powerupName + 2]);
+            bool active_load = bool.Parse(fileReading[i_powerupName + 1]),
+                 unlocked_load = bool.Parse(fileReading[i_powerupName + 2]);
             int upgradeStage_load = int.Parse(fileReading[i_powerupName + 3]);
 
-            all_powerUpsSO[i].LoadIsUnlocked(unlocked_load);
             all_powerUpsSO[i].LoadIsActive(active_load);
+            all_powerUpsSO[i].LoadIsUnlocked(unlocked_load);
             all_powerUpsSO[i].LoadUpgradeStage(upgradeStage_load);
         }
 
@@ -192,10 +196,10 @@ public class SaveManager : MonoBehaviour
         bool fullscreen_load = bool.Parse(fileReading[i_options + 4]);
 
         //Loads all options numbers
-        optionsSO.ChangeLanguage(language_load);
-        optionsSO.ChangeMusicVolume(musicVol_load);
-        optionsSO.ChangeSoundVolume(soundVol_load);
-        optionsSO.ToggleFullscreen(fullscreen_load);
+        opt_SO.ChangeLanguage(language_load);
+        opt_SO.ChangeMusicVolume(musicVol_load);
+        opt_SO.ChangeSoundVolume(soundVol_load);
+        opt_SO.ToggleFullscreen(fullscreen_load);
 
         #endregion
     }
@@ -213,8 +217,8 @@ public class SaveManager : MonoBehaviour
         //Resets all power-ups variables
         foreach (var powerUp in all_powerUpsSO)
         {
-            powerUp.LoadIsUnlocked(false);
             powerUp.LoadIsActive(false);
+            powerUp.LoadIsUnlocked(false);
             powerUp.LoadUpgradeStage(0);
         }
 
