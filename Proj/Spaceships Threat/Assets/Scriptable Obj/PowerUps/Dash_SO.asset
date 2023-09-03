@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82c898e260a27714295916825d1e5932, type: 3}
   m_Name: Dash_SO
   m_EditorClassIdentifier: 
-  isActive: 1
-  isUnlocked: 1
+  isActive: 0
+  isUnlocked: 0
   basePrice: 250
-  priceNow: 251
+  priceNow: 250
   priceAddedCurve:
     serializedVersion: 2
     m_Curve:
@@ -31,7 +31,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  upgradeStage: 3
+  upgradeStage: 0
   maxUpgradeStages: 3
   isRechargable: 1
   rechargeTime: 5

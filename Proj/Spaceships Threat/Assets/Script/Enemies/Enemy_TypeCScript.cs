@@ -2,21 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy_TypeCScript : MonoBehaviour
+public class Enemy_TypeCScript : MonoBehaviour, IEnemy, IDamageable
 {
     ObjectPoolingScript poolingScr;
-    [SerializeField] string typeB_tag = "Enemy type C";
+    [SerializeField] string typeB_tag = "Type C Enemy";
+    [SerializeField] string damagePart_tag = "Damage particles";
     [SerializeField] string deathPart_tag = "Enemy Death particles";
 
     [Min(0)]
     [SerializeField] int maxHealth = 10;
     int health_now;
     bool isDead = false;
+    [SerializeField] int invSec = 1;
+    CustomTimer invTimer = new CustomTimer();
+    bool isInvincible = true;
 
+
+    PlayerStatsManager playerStatsMng;
 
     [Space(20)]
-    PlayerStatsManager playerStatsManag;
-
     [Min(1)]
     [SerializeField] float movingVelocity = 1.5f;
     Vector3 positionToGo;
@@ -25,7 +29,6 @@ public class Enemy_TypeCScript : MonoBehaviour
     [Space(20)]
     [Min(0)]
     [SerializeField] float fireRate_Seconds = 5;
-    CustomTimer shootTimer = new CustomTimer();
 
 
     [Header("—— Scraps ——")]
@@ -44,23 +47,39 @@ public class Enemy_TypeCScript : MonoBehaviour
 
     private void Awake()
     {
-        health_now = maxHealth;
+        ResetHealth();
 
         poolingScr = FindObjectOfType<ObjectPoolingScript>();
-        playerStatsManag = FindObjectOfType<PlayerStatsManager>();
+        playerStatsMng = FindObjectOfType<PlayerStatsManager>();
+
+        invTimer.maxTime = invSec;
+        invTimer.OnTimerDone_event.AddListener(() => {isInvincible = false; });
 
 
-        shootTimer.maxTime = fireRate_Seconds;
-        //shootTimer.OnTimerDone_event.AddListener(() => _______());
+        //Changes the fire-rate of the enemy
+        GetComponentInChildren<ShootingScript>().SetFireRate(fireRate_Seconds);
+    }
+
+
+    private void OnEnable()
+    {
+        ResetHealth();
     }
 
 
     void Update()
     {
+        //---Timer---//
+        if (isInvincible)
+        {
+            invTimer.AddTimeToTimer();
+        }
+        
+
         //Gets the player XY position
         //and moves towards the player position
-        positionToGo = new Vector3(playerStatsManag.transform.position.x,
-                                   playerStatsManag.transform.position.y,
+        positionToGo = new Vector3(playerStatsMng.transform.position.x,
+                                   playerStatsMng.transform.position.y,
                                    transform.position.z);
 
         transform.position = Vector3.MoveTowards(transform.position,
@@ -69,13 +88,38 @@ public class Enemy_TypeCScript : MonoBehaviour
     }
 
 
+    void ResetHealth()
+    {
+        health_now = maxHealth;
+    }
+
+
     #region Damage & Death
 
     public void TakeDamage(int amount)
     {
-        health_now -= amount;   //Subtracts the damage amount to the current health
+        if (!isInvincible)    //If the enemy CAN take damage...
+        {
+            health_now -= amount;   //Subtracts the damage amount to the current health
 
-        CheckDeath();   //Checks if this enemy is dead
+            #region Feedback
+
+            //Plays the damaged particles
+            //(only when it's not dead)
+            if (health_now > 0)
+            {
+                GameObject dmgObj;
+                ParticleSystem dmgPart;
+                dmgObj = poolingScr.TakeObjectFromPool(damagePart_tag, transform.position, Quaternion.identity);
+                dmgPart = dmgObj.GetComponent<ParticleSystem>();
+                dmgPart.gameObject.transform.position = transform.position;
+                dmgPart.Play();
+            }
+
+            #endregion
+
+            CheckDeath();   //Checks if this enemy is dead
+        }
     }
 
     public void CheckDeath()

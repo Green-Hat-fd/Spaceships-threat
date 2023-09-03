@@ -62,3 +62,18 @@ MonoBehaviour:
     text: Compra
   - tag: tUpgrade_PU
     text: Migliora
+  - tag: tSonicBoom_PU_desc
+    text: Crea un proiettile gigante contro i nemici - [Ricarica]
+  - tag: tDash_PU_desc
+    text: Ti permette di "scattare" via da situazioni pericolose - [Ricarica]
+  - tag: tShielding_PU_desc
+    text: Aumenta i tuoi max HP
+  - tag: tStopwatch_PU_desc
+    text: Diminuisce la durata dei de-potenziamenti
+  - tag: tNewGame
+    text: Nuova Partita
+  - tag: tNewGame_Warning
+    text: 'Sei sicuro di voler creare una Nuova Partita?
+
+      (Tutti i tuoi progressi
+      andranno PERSI)'

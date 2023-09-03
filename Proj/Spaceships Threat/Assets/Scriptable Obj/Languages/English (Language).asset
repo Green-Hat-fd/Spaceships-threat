@@ -62,3 +62,18 @@ MonoBehaviour:
     text: Buy
   - tag: tUpgrade_PU
     text: Upgrade
+  - tag: tSonicBoom_PU_desc
+    text: Creates a giant bullet to shoot at enemies - [Rechargable]
+  - tag: tDash_PU_desc
+    text: Makes you "dash" out from dangerous situations - [Rechargeable]
+  - tag: tShielding_PU_desc
+    text: Increases your max HP
+  - tag: tStopwatch_PU_desc
+    text: Makes the duration of power-downs less effective
+  - tag: tNewGame
+    text: New Game
+  - tag: tNewGame_Warning
+    text: 'Are you sure you want to create a New Game?
+
+      (All your progress
+      will be LOST)'

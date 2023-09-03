@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class SonicBoomPowerUp : MonoBehaviour
 {
-    MouseCursorManager cursorManager;
+    MouseCursorManager cursorMng;
+    ObjectPoolingScript poolingScr;
     
     InputManager.PlayerActions PlayerInput;
 
+    [SerializeField] Transform playerCharacter;
     [SerializeField] PowerUpSO_Script sonicBoom_SO;
+    [SerializeField] string sonicBoomPoolTag = "SonicBoom Bullets";
 
     [Space(20)]
     [SerializeField] float sonicBoomDamage;
@@ -20,12 +23,13 @@ public class SonicBoomPowerUp : MonoBehaviour
 
     private void Awake()
     {
-        cursorManager = FindObjectOfType<MouseCursorManager>();
+        cursorMng = FindObjectOfType<MouseCursorManager>();
+        poolingScr = FindObjectOfType<ObjectPoolingScript>();
 
         //Changes the cursor when fully charged
         sonicBoom_SO.GetTimer().OnTimerDone_event
                                .AddListener(
-                                () => cursorManager.ChangeCursor_Crosshair());
+                                () => cursorMng.ChangeCursor_Crosshair());
     }
 
     void Update()
@@ -61,11 +65,17 @@ public class SonicBoomPowerUp : MonoBehaviour
 
     void ActivateSonicBoomPowerUp()
     {
-        //TODO: Spara il BoatoSonico/SonicBoom
+        //Shoots the Sonic Boom bullet
+        GameObject sonicBoomBullet;
+        sonicBoomBullet = poolingScr
+                          .TakeObjectFromPool(sonicBoomPoolTag,
+                                              playerCharacter.position,
+                                              playerCharacter.rotation);
+
 
 
         //Revert the cursor to default when used
-        cursorManager.ChangeCursor_Default();
+        cursorMng.ChangeCursor_Default();
 
 
         #region Feedback

@@ -15,6 +15,7 @@ public class PlayerStatsSO_Script : ScriptableObject
     [SerializeField] int maxHealth_min = 3;
     [Range(0, 10)]
     [SerializeField] int maxHealth = 6;
+    int _maxHpTemp;
     [SerializeField] float invSec = 3.5f;
 
     [Space(20)]
@@ -56,11 +57,11 @@ public class PlayerStatsSO_Script : ScriptableObject
     {
         health++;
     }
-    public void AddMaxHealth(int amountToAdd)
+    public void AddMaxHealthTemp(int amountToAdd)
     {
-        if (maxHealth >= maxHealth_min)
+        if (_maxHpTemp < maxHealth)
         {
-            maxHealth += amountToAdd;
+            _maxHpTemp += amountToAdd;
         }
     }
 
@@ -94,7 +95,7 @@ public class PlayerStatsSO_Script : ScriptableObject
     #region Custom Get functions
 
     public int GetHealth() => health;
-    public int GetMaxHealth() => maxHealth;
+    public int GetMaxHealthTemp() => _maxHpTemp;
 
     public bool GetIsDead() => isDead;
     public int GetTempScraps() => scraps_temp;
@@ -114,12 +115,16 @@ public class PlayerStatsSO_Script : ScriptableObject
         isDead = health <= 0;
     }
 
+    public void ResetHealth()
+    {
+        _maxHpTemp = maxHealth_min;
+    }
     /// <summary>
     /// Used when the player starts a new game
     /// </summary>
     public void ResetPlayerStats()
     {
-        health = maxHealth;   //Restores all the health
+        health = _maxHpTemp;   //Restores all the health
         CheckDeath();
 
         allScraps += scraps_temp;   //Adds the collected scraps into the pile...

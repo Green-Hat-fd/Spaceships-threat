@@ -1,32 +1,33 @@
 # STATS #
-1000000
+1229392
 
 # POWER-UPS #
-Dash_SO
-True
-False
-0
-Shielding_SO
-False
-False
-0
 Sonic Boom_SO
 False
 False
 0
+0
+Dash_SO
+False
+False
+250
+0
+Shielding_SO
+False
+False
+1500
+0
 Stopwatch_SO
 False
 False
+1500
 0
+
+# PLAY COUNT #
+1
 
 # OPTIONS #
 1
-1
+0,8
 0,8
 False
-
-
-
-
-
-1234567

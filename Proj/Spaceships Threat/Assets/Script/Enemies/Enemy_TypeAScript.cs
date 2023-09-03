@@ -5,19 +5,22 @@ using UnityEngine;
 public class Enemy_TypeAScript : MonoBehaviour, IEnemy, IDamageable
 {
     ObjectPoolingScript poolingScr;
-    [SerializeField] string typeA_tag = "Enemy type A";
+    [SerializeField] string typeA_tag = "Type A Enemy";
+    [SerializeField] string damagePart_tag = "Damage particles";
     [SerializeField] string deathPart_tag = "Enemy Death particles";
 
     [Min(0)]
     [SerializeField] int maxHealth = 5;
     int health_now;
     bool isDead = false;
+    [SerializeField] int invSec = 1;
+    CustomTimer invTimer = new CustomTimer();
+    bool isInvincible = true;
 
 
     [Space(20)]
     [Min(0)]
     [SerializeField] float fireRate_Seconds = 5;
-    CustomTimer shootTimer = new CustomTimer();
     [Min(0)]
     [SerializeField] float secsInScreen = 45;
     CustomTimer inScreenTimer = new CustomTimer();
@@ -39,23 +42,42 @@ public class Enemy_TypeAScript : MonoBehaviour, IEnemy, IDamageable
 
     private void Awake()
     {
-        health_now = maxHealth;
+        ResetHealth();
 
         poolingScr = FindObjectOfType<ObjectPoolingScript>();
 
-
-        shootTimer.maxTime = fireRate_Seconds;
-        //shootTimer.OnTimerDone_event.AddListener(() => _______());
         inScreenTimer.maxTime = secsInScreen;
         //inScreenTimer.OnTimerDone_event.AddListener(() => _______());
+        invTimer.maxTime = invSec;
+        invTimer.OnTimerDone_event.AddListener(() => {isInvincible = false; });
+
+
+        //Changes the fire-rate of the enemy
+        GetComponentInChildren<ShootingScript>().SetFireRate(fireRate_Seconds);
+    }
+
+
+    private void OnEnable()
+    {
+        ResetHealth();
     }
 
 
     void Update()
     {
         //---Timer---//
-        shootTimer.AddTimeToTimer();
         inScreenTimer.AddTimeToTimer();
+        
+        if (isInvincible)
+        {
+            invTimer.AddTimeToTimer();
+        }
+    }
+
+
+    void ResetHealth()
+    {
+        health_now = maxHealth;
     }
 
 
@@ -63,9 +85,31 @@ public class Enemy_TypeAScript : MonoBehaviour, IEnemy, IDamageable
 
     public void TakeDamage(int amount)
     {
-        health_now -= amount;   //Subtracts the damage amount to the current health
+        if (!isInvincible)    //If the enemy CAN take damage...
+        {
+            health_now -= amount;   //Subtracts the damage amount to the current health
 
-        CheckDeath();   //Checks if this enemy is dead
+            #region Feedback
+
+            //Plays the damaged particles
+            //(only when it's not dead)
+            if (health_now > 0)
+            {
+                GameObject dmgObj;
+                ParticleSystem dmgPart;
+                dmgObj = poolingScr.TakeObjectFromPool(damagePart_tag, transform.position, Quaternion.identity);
+                dmgPart = dmgObj.GetComponent<ParticleSystem>();
+                dmgPart.gameObject.transform.position = transform.position;
+                dmgPart.Play();
+            }
+
+            #endregion
+
+            CheckDeath();   //Checks if this enemy is dead
+
+
+            isInvincible = true;
+        }
     }
 
     public void CheckDeath()

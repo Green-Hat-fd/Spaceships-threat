@@ -5,17 +5,22 @@ using UnityEngine;
 public class Enemy_TypeBScript : MonoBehaviour, IEnemy, IDamageable
 {
     ObjectPoolingScript poolingScr;
-    [SerializeField] string typeB_tag = "Enemy type B";
+    [SerializeField] string typeB_tag = "Type B Enemy";
+    [SerializeField] string damagePart_tag = "Damage particles";
     [SerializeField] string deathPart_tag = "Enemy Death particles";
 
     [Min(0)]
     [SerializeField] int maxHealth = 10;
     int health_now;
     bool isDead = false;
+    [SerializeField] int invSec = 1;
+    CustomTimer invTimer = new CustomTimer();
+    bool isInvincible = true;
 
+
+    PlayerMovemRB playerMovScr;
 
     [Space(20)]
-    PlayerMovemRB playerMovScript;
     [Min(0)]
     [SerializeField] Vector2 changePos_timeRange = new Vector2(10, 15);
     CustomTimer positionTimer = new CustomTimer();
@@ -31,7 +36,7 @@ public class Enemy_TypeBScript : MonoBehaviour, IEnemy, IDamageable
     [Space(20)]
     [Min(0)]
     [SerializeField] float fireRate_Seconds = 5;
-    CustomTimer shootTimer = new CustomTimer();
+    ShootingScript gunsShootingScr;
 
 
     [Header("—— Scraps ——")]
@@ -49,21 +54,39 @@ public class Enemy_TypeBScript : MonoBehaviour, IEnemy, IDamageable
 
     private void Awake()
     {
-        health_now = maxHealth;
+        ResetHealth();
 
         poolingScr = FindObjectOfType<ObjectPoolingScript>();
-        playerMovScript = FindObjectOfType<PlayerMovemRB>();
+        playerMovScr = FindObjectOfType<PlayerMovemRB>();
+        gunsShootingScr = GetComponentInChildren<ShootingScript>();
         
+        invTimer.maxTime = invSec;
+        invTimer.OnTimerDone_event.AddListener(() => {isInvincible = false; });
 
-        shootTimer.maxTime = fireRate_Seconds;
-        //shootTimer.OnTimerDone_event.AddListener(() => _______());
+
+        //Changes the fire-rate of the enemy
+        GetComponentInChildren<ShootingScript>().SetFireRate(fireRate_Seconds);
+        
         ChangePosition();
         positionTimer.OnTimerDone_event.AddListener(() => ChangePosition());
     }
 
 
+    private void OnEnable()
+    {
+        ResetHealth();
+    }
+
+
     void Update()
     {
+        //---Timer---//
+        if (isInvincible)
+        {
+            invTimer.AddTimeToTimer();
+        }
+        
+
         //Checks if it's arrived in the new position
         float dist = Vector3.Distance(transform.position, positionToGo);
         isInPosition = dist <= MIN_DISTANCE;
@@ -76,6 +99,7 @@ public class Enemy_TypeBScript : MonoBehaviour, IEnemy, IDamageable
 
             if (positionTimer.CheckIsOver())
                 positionTimer.Restart();    //Restarts the timer when arrived to the position
+
         }
         else
         {
@@ -84,11 +108,19 @@ public class Enemy_TypeBScript : MonoBehaviour, IEnemy, IDamageable
                                                      positionToGo,
                                                      Time.deltaTime * movingVelocity);
         }
+
+        SetActiveGuns(isInPosition);
+    }
+
+
+    void ResetHealth()
+    {
+        health_now = maxHealth;
     }
 
     void SetActiveGuns(bool value)
     {
-
+        gunsShootingScr.enabled = value;
     }
 
 
@@ -96,7 +128,7 @@ public class Enemy_TypeBScript : MonoBehaviour, IEnemy, IDamageable
 
     void ChangePosition()
     {
-        Vector2 playerBoundaryBox = playerMovScript.GetBoundaryBox();
+        Vector2 playerBoundaryBox = playerMovScr.GetBoundaryBox();
 
         //Gets a new position to go inside
         //the player boundary box
@@ -122,9 +154,28 @@ public class Enemy_TypeBScript : MonoBehaviour, IEnemy, IDamageable
 
     public void TakeDamage(int amount)
     {
-        health_now -= amount;   //Subtracts the damage amount to the current health
+        if (!isInvincible)    //If the enemy CAN take damage...
+        {
+            health_now -= amount;   //Subtracts the damage amount to the current health
 
-        CheckDeath();   //Checks if this enemy is dead
+            #region Feedback
+
+            //Plays the damaged particles
+            //(only when it's not dead)
+            if (health_now > 0)
+            {
+                GameObject dmgObj;
+                ParticleSystem dmgPart;
+                dmgObj = poolingScr.TakeObjectFromPool(damagePart_tag, transform.position, Quaternion.identity);
+                dmgPart = dmgObj.GetComponent<ParticleSystem>();
+                dmgPart.gameObject.transform.position = transform.position;
+                dmgPart.Play();
+            }
+
+                #endregion
+
+            CheckDeath();   //Checks if this enemy is dead
+        }
     }
 
     public void CheckDeath()

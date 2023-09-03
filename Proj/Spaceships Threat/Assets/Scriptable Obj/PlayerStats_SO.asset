@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: PlayerStats_SO
   m_EditorClassIdentifier: 
   isDead: 0
-  health: 6
+  health: 3
   maxHealth_min: 3
   maxHealth: 6
   invSec: 3.5
   scraps_temp: 0
-  allScraps: 100000
+  allScraps: 1229317
   DEBUG: 0
   powerDownTime: 0
   powerDownGet: 

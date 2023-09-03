@@ -10,9 +10,11 @@ public class MainGameManager : MonoBehaviour
     ObjectPoolingScript poolingScr;
 
     [Header("—— Managers & UIs ——")]
-    [SerializeField] SaveManager saveManager;
-    [SerializeField] ChangeOptionsScript changeOptScript;
-    [SerializeField] EnemiesManager enemyManager;
+    [SerializeField] SaveManager saveMng;
+    [SerializeField] ChangeOptionsScript changeOptScr;
+    [SerializeField] EnemiesManager enemyMng;
+    [SerializeField] NumberedEventsManager playCountMng;
+    [SerializeField] PauseManager pauseMng;
 
     [SerializeField] Canvas mainGameUI;
     [SerializeField] Canvas gameOverUI,
@@ -20,9 +22,10 @@ public class MainGameManager : MonoBehaviour
                             powerUpsUI,
                             optionsUI;
     [SerializeField] GameObject mainMenuObjects;
+    [SerializeField] GameObject newGameWarningObj;
 
     [Header("—— Objects and Scripts to activate/enable ——")]
-    [SerializeField] PlayerStatsManager statsManager;
+    [SerializeField] PlayerStatsManager statsMng;
     [SerializeField] List<MonoBehaviour> scriptToEnable;
     [SerializeField] List<GameObject> objectsToActivate;
 
@@ -31,7 +34,7 @@ public class MainGameManager : MonoBehaviour
     [SerializeField] float scrapsFromPausePercent = 0.25f;
 
     [Header("—— Feedback ——")]
-    [SerializeField] MusicManager musicManager;
+    [SerializeField] MusicManager musicMng;
     [Min(0)]
     [SerializeField] int mainMenuMusicIndex = 0,
                          gameMusicIndex = 1;
@@ -47,13 +50,13 @@ public class MainGameManager : MonoBehaviour
 
     void Awake()
     {
-        musicManager = FindObjectOfType<MusicManager>();
+        musicMng = FindObjectOfType<MusicManager>();
         poolingScr = FindObjectOfType<ObjectPoolingScript>();
 
-        saveManager.LoadGame();             //Loads the game from the save file
+        saveMng.LoadGame();             //Loads the game from the save file
 
         _ReturnToMainMenu();
-        changeOptScript.UpdateOptions();
+        changeOptScr.UpdateOptions();
     }
 
 
@@ -71,7 +74,7 @@ public class MainGameManager : MonoBehaviour
             obj.SetActive(value);
         }
 
-        statsManager.transform.localPosition = Vector3.zero;    //Reset the player's position
+        statsMng.transform.localPosition = Vector3.zero;    //Reset the player's position
 
         isPlayerPlaying = value;    //Set the playing state
     }
@@ -87,9 +90,14 @@ public class MainGameManager : MonoBehaviour
 
     public void FirstSetup()
     {
+        stats_SO.ResetHealth();
+        statsMng.CheckPowerUp();
         stats_SO.ResetPlayerStats();
-        
 
+        enemyMng.ResetEnemiesOnScreen();
+        enemyMng.SpawnEnemiesAtStart();
+
+        pauseMng.ChangeIsPaused(false);            //The game is not paused
         gameOverUI.gameObject.SetActive(false);    //Hides the Game Over screen
     }
     public void StartGame()
@@ -101,7 +109,7 @@ public class MainGameManager : MonoBehaviour
         movingStarts_part.Play();
 
         //Chages music to the Game one
-        musicManager.ChangeMusicPlaylist(gameMusicIndex);
+        musicMng.ChangeMusicPlaylist(gameMusicIndex);
 
 
         //Shows the player
@@ -127,7 +135,7 @@ public class MainGameManager : MonoBehaviour
         playerDeathPart.Clear();
 
         //Chages music to the MainMenu one
-        musicManager.ChangeMusicPlaylist(mainMenuMusicIndex);
+        musicMng.ChangeMusicPlaylist(mainMenuMusicIndex);
 
         //Activates all the menus and objects
         powerUpsUI.gameObject.SetActive(true);
@@ -136,6 +144,10 @@ public class MainGameManager : MonoBehaviour
         mainMenuUI.GetComponent<Animator>().SetTrigger("Visible");
         optionsUI.gameObject.SetActive(true);
         optionsUI.GetComponent<Animator>().SetTrigger("Visible");
+        newGameWarningObj.SetActive(false);
+
+        //Increases to the play count
+        playCountMng.IncreaseCount();
     }
 
     public void ReturnToMainMenuFromDeath()
@@ -153,7 +165,7 @@ public class MainGameManager : MonoBehaviour
         stats_SO.ResetPlayerStats();
 
         //Saves the game
-        saveManager.SaveGame();
+        saveMng.SaveGame();
 
 
 
@@ -167,7 +179,7 @@ public class MainGameManager : MonoBehaviour
         stats_SO.ResetPlayerStats(scrapsFromPausePercent);
 
         //Saves the game
-        saveManager.SaveGame();
+        saveMng.SaveGame();
 
 
         //Removes all the entities

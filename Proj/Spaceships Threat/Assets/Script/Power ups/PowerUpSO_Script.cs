@@ -65,7 +65,11 @@ public class PowerUpSO_Script : ScriptableObject
     /// </summary>
     public void AddUpgradeStage()
     {
-        upgradeStage++;
+        //Adds to it only when it's less than the max stage
+        if (upgradeStage < maxUpgradeStages)
+        {
+            upgradeStage++;
+        }
 
         UpdatePrice();
     }
@@ -83,20 +87,32 @@ public class PowerUpSO_Script : ScriptableObject
         isUnlocked = value;
     }
 
+    public void SetBasePrice(int value)
+    {
+        basePrice = value;
+
+        UpdatePrice();
+    }
+
 
     //Load functions
-    public void LoadIsActive(bool value) 
+    public void LoadIsActive(bool loadNum) 
     { 
-        isActive = value;
+        isActive = loadNum;
     }
-    public void LoadIsUnlocked(bool value)
+    public void LoadIsUnlocked(bool loadNum)
     {
-        isUnlocked = value;
+        isUnlocked = loadNum;
     }
 
-    public void LoadUpgradeStage(int value) 
+    public void LoadBasePrice(int loadNum) 
     { 
-        upgradeStage = value;
+        basePrice = loadNum;
+    }
+
+    public void LoadUpgradeStage(int loadNum) 
+    { 
+        upgradeStage = loadNum;
     }
 
     #endregion
@@ -106,9 +122,11 @@ public class PowerUpSO_Script : ScriptableObject
     public bool GetIsActive() => isActive;
     public bool GetIsUnlocked() => isUnlocked;
 
+    public int GetBasePrice() => basePrice;
     public int GetPriceNow() => priceNow;
 
     public int GetUpgradeStage() => upgradeStage;
+    public bool IsMaxUpgraded() => upgradeStage >= maxUpgradeStages;
 
     public float GetRechargeTime() => rechargeTime;
 

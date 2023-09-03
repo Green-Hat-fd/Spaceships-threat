@@ -9,8 +9,8 @@ public class PauseManager : MonoBehaviour
     bool isPaused = false;
 
     [Header("—— Managers & UIs ——")]
-    [SerializeField] MainGameManager mainGameManag;
-    [SerializeField] MusicManager musicManag;
+    [SerializeField] MainGameManager mainGameMng;
+    [SerializeField] MusicManager musicMng;
     [SerializeField] GameObject pauseWarning;
     [SerializeField] Canvas optionsUI;
     [SerializeField] ChangeOptionsScript changeOptionsScr;
@@ -25,7 +25,7 @@ public class PauseManager : MonoBehaviour
 
     private void Awake()
     {
-        musicManag = FindObjectOfType<MusicManager>();
+        musicMng = FindObjectOfType<MusicManager>();
 
         pauseMenuUI.gameObject.SetActive(false);    //De-activates the pause menu
     }
@@ -37,11 +37,11 @@ public class PauseManager : MonoBehaviour
 
 
         //Gets the current playlist
-        playlistNow_source = musicManag.GetAudioSourceCurrentMusic();
+        playlistNow_source = musicMng.GetAudioSourceCurrentMusic();
 
 
 
-        if (GeneralInput.Pause.triggered && mainGameManag.GetIsPlayerPlaying())
+        if (GeneralInput.Pause.triggered && mainGameMng.GetIsPlayerPlaying())
         {
             //Inverts the pause state when
             //the Pause button is triggered

@@ -13,7 +13,14 @@ public class PowerUpManager : MonoBehaviour
         public TMP_Text priceTxt;
         public Button buyButton;
         public Button upgradeButton;
+        #region Tooltip()
+        [Tooltip("The image that prevents clicking on this power-up")]
+        #endregion
         public Image blockingImg;
+        #region Tooltip()
+        [Tooltip("The image that indicates \nif the power-up is bought or not")]
+        #endregion
+        public Image unlockedImg;
     }
 
 
@@ -27,6 +34,11 @@ public class PowerUpManager : MonoBehaviour
     [Space(20)]
     [SerializeField] List<PUElements_Class> elements_list;
     Dictionary<PowerUpSO_Script, PUElements_Class> powerUp_dict;
+
+    [Space(20)]
+    [SerializeField] PowerUpSO_Script firstPowerUp;
+    [Range(0, 1)]
+    [SerializeField] float percentageFirstPU = 0.3f;
 
     [Header("—— Feedback ——")]
     [SerializeField] AudioSource clickSource;
@@ -59,6 +71,8 @@ public class PowerUpManager : MonoBehaviour
 
     void Update()
     {
+
+
         #region Changing the UI
 
         foreach (PUElements_Class elem in powerUp_dict.Values)    //For all power-ups in the dictionary...
@@ -69,11 +83,11 @@ public class PowerUpManager : MonoBehaviour
 
             //Removes the images that prevents clicks
             //if the power-up can be bought
-            bool elem_displayBlockingImg = elem.powerUp_SO.GetIsActive();
+            bool elem_isSOActive = elem.powerUp_SO.GetIsActive();
 
             elem.blockingImg
                 .gameObject
-                .SetActive(!elem_displayBlockingImg);
+                .SetActive(!elem_isSOActive);
 
 
             //Removes the [Buy] button and shows the [Upgrade] one
@@ -82,6 +96,16 @@ public class PowerUpManager : MonoBehaviour
 
             elem.buyButton.gameObject.SetActive(!elem_isUnlocked);
             elem.upgradeButton.gameObject.SetActive(elem_isUnlocked);
+
+
+            //Removes the icon that notifies
+            //if a power-up is bought
+            elem.unlockedImg.gameObject.SetActive(!elem_isUnlocked && elem_isSOActive);
+
+
+            //Removes the possibility to buy other
+            //upgrades if the power-up is maxed
+            elem.upgradeButton.interactable = !elem.powerUp_SO.IsMaxUpgraded();
         }
 
 
@@ -112,12 +136,35 @@ public class PowerUpManager : MonoBehaviour
 
 
         if (canPlayerPay)
-        {        
+        {
             powerUp.SetIsUnlocked(true);    //Unlocks the power-up
+            powerUp.AddUpgradeStage();      //Updates the update stage & price of the power-up
         
             stats_SO.RemoveAllScraps(powerUp.GetPriceNow());    //Withdraws the Scraps from the pile
+        
 
-            powerUp.AddUpgradeStage();    //Updates the update stage & price of the power-up
+            clickSource.PlayOneShot(usedClick_sfx);
+        }
+        else
+        {
+            clickSource.PlayOneShot(idleClick_sfx);
+        }
+    }
+
+
+    public void UpgradePowerUp(PowerUpSO_Script powerUp_SO)
+    {
+        PowerUpSO_Script powerUp = powerUp_dict[powerUp_SO].powerUp_SO;
+
+        //Checks if the player can buy the power-up
+        bool canPlayerPay = stats_SO.GetAllScraps() >= powerUp.GetPriceNow();
+
+
+        if (canPlayerPay)
+        {
+            powerUp.AddUpgradeStage();    //Upgrades the power-up stage
+            
+            stats_SO.RemoveAllScraps(powerUp.GetPriceNow());    //Withdraws the Scraps from the pile
 
 
             clickSource.PlayOneShot(usedClick_sfx);
@@ -125,6 +172,23 @@ public class PowerUpManager : MonoBehaviour
         else
         {
             clickSource.PlayOneShot(idleClick_sfx);
+        }
+    }
+
+
+
+    public void SetupFirstPowerup(bool active)
+    {
+        //Sets the first power-up price to the
+        //percentage after the second players playtrough
+        if (stats_SO.GetAllScraps() >= (percentageFirstPU*10))
+        {
+            firstPowerUp.SetIsActive(active);
+            firstPowerUp.SetBasePrice(active
+                                      ?
+                                      (int)(stats_SO.GetAllScraps() * percentageFirstPU)
+                                      :
+                                      1000);
         }
     }
 }

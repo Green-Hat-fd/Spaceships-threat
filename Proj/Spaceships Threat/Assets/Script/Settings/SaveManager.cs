@@ -8,6 +8,7 @@ public class SaveManager : MonoBehaviour
     [SerializeField] TextAsset saveTxt;
 
     [Header("—— Information variables ——")]
+    [SerializeField] NumberedEventsManager playCountMng;
     [SerializeField] PlayerStatsSO_Script statsSO;
     [SerializeField] OptionsSO_Script opt_SO;
     [SerializeField] List<PowerUpSO_Script> all_powerUpsSO;
@@ -18,6 +19,7 @@ public class SaveManager : MonoBehaviour
 
     const string STATS_TITLE = "# STATS #",
                  POWERUPS_TITLE = "# POWER-UPS #",
+                 PLAYCOUNT_TITLE = "# PLAY COUNT #",
                  OPTIONS_TITLE = "# OPTIONS #";
     
     
@@ -26,6 +28,10 @@ public class SaveManager : MonoBehaviour
     {
         //Takes the file path
         file_path = Application.dataPath + "/" + fileName + ".txt";
+
+        //Makes it the first save if there isn't a save file
+        if (!File.Exists(file_path))
+            playCountMng.LoadCount(0);
     }
 
 
@@ -53,8 +59,18 @@ public class SaveManager : MonoBehaviour
             saveString += powerUp.name + "\n"
                           + powerUp.GetIsActive() + "\n"
                           + powerUp.GetIsUnlocked() + "\n"
+                          + powerUp.GetBasePrice() + "\n"
                           + powerUp.GetUpgradeStage() + "\n";
         }
+
+        #endregion
+
+
+        #region -- Play count --
+
+        saveString += "\n" + PLAYCOUNT_TITLE + "\n";
+
+        saveString += playCountMng.GetCount() + "\n";   //Adds the play count
 
         #endregion
 
@@ -86,26 +102,33 @@ public class SaveManager : MonoBehaviour
         //  4:  Name (sonic boom)
         //  5:  - Is Active
         //  6:  - Is Unlocked
-        //  7:  - Upgrade stage
-        //  8:  Name (shielding)
-        //  9:  - Is Active
-        // 10:  - Is Unlocked
-        // 11:  - Upgrade stage
-        // 12:  Name (dash)
-        // 13:  - Is Unlocked
-        // 14:  - Is Active
-        // 15:  - Upgrade stage
-        // 16:  Name (stopwatch)
-        // 17:  - Is Unlocked
-        // 18:  - Is Active
-        // 19:  - Upgrade stage
-        // 20:  
-        // 21:  ### OPTIONS ###
-        // 22:  Language
-        // 23:  Music volume
-        // 24:  Sound volume
-        // 25:  Is Fullscreen
-        // 26:  
+        //  7:  - Base price
+        //  8:  - Upgrade stage
+        //  9:  Name (shielding)
+        // 10:  - Is Active
+        // 11:  - Is Unlocked
+        // 12:  - Base price
+        // 13:  - Upgrade stage
+        // 14:  Name (dash)
+        // 15:  - Is Unlocked
+        // 16:  - Is Active
+        // 17:  - Base price
+        // 18:  - Upgrade stage
+        // 19:  Name (stopwatch)
+        // 20:  - Is Unlocked
+        // 21:  - Is Active
+        // 22:  - Base price
+        // 23:  - Upgrade stage
+        // 24:  
+        // 25:  # PLAY COUNT #
+        // 26:  Play count
+        // 27:  
+        // 28:  ### OPTIONS ###
+        // 29:  Language
+        // 30:  Music volume
+        // 31:  Sound volume
+        // 32:  Is Fullscreen
+        // 33:  
         #endregion
     }
 
@@ -114,7 +137,7 @@ public class SaveManager : MonoBehaviour
     {
         string[] fileReading = new string[0];
 
-        int i_stats = 0, i_powerups = 0, i_options = 0;
+        int i_stats = 0, i_powerups = 0, i_playcount = 0, i_options = 0;
 
 
         //Read the save file
@@ -125,6 +148,7 @@ public class SaveManager : MonoBehaviour
         else
         {
             print("[!] Error message");
+            return;
         }
 
         #region Finding the starts points
@@ -140,6 +164,10 @@ public class SaveManager : MonoBehaviour
 
                 case POWERUPS_TITLE:
                     i_powerups = i;
+                    break;
+
+                case PLAYCOUNT_TITLE:
+                    i_playcount = i;
                     break;
 
                 case OPTIONS_TITLE:
@@ -168,21 +196,36 @@ public class SaveManager : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             //Turns from string to int for each power-up's name
-            int i_powerupName = i_powerups + (4 * i) + 1;
+            int i_powerupName = i_powerups + (5 * i) + 1;
             
             /* 
-             * 4 ---> the lines' skip amount (for each power-up section)
+             * 5 ---> the lines' skip amount (for each power-up section)
              */
 
             //Takes the corresponding numbers
             bool active_load = bool.Parse(fileReading[i_powerupName + 1]),
                  unlocked_load = bool.Parse(fileReading[i_powerupName + 2]);
-            int upgradeStage_load = int.Parse(fileReading[i_powerupName + 3]);
+            int basePrice_load = int.Parse(fileReading[i_powerupName + 3]),
+                upgradeStage_load = int.Parse(fileReading[i_powerupName + 4]);
 
             all_powerUpsSO[i].LoadIsActive(active_load);
             all_powerUpsSO[i].LoadIsUnlocked(unlocked_load);
+            all_powerUpsSO[i].LoadBasePrice(basePrice_load);
             all_powerUpsSO[i].LoadUpgradeStage(upgradeStage_load);
         }
+
+        #endregion
+
+
+        #region -- Play count --
+
+        //Turns from string to int
+        int playCount_load = int.Parse(fileReading[i_playcount + 1]);
+
+        //Loads the player played games' count
+        playCountMng.LoadCount(playCount_load);
+
+        playCountMng.CustomAddCount(0);
 
         #endregion
 
@@ -225,6 +268,11 @@ public class SaveManager : MonoBehaviour
 
         //Saves the game in a new file
         SaveGame();
+
+
+        //Resets the plays count
+        playCountMng.ResetCount();
+        playCountMng.CustomAddCount(0);
     }
 
     public void DeleteSaveFile()

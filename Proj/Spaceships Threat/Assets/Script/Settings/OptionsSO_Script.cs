@@ -8,37 +8,6 @@ using UnityEngine.Audio;
 public class OptionsSO_Script : ScriptableObject
 {
     //Main Menu
-    #region Change scene
-
-
-    public void LoadChosenScene(int sceneNum)
-    {
-        SceneManager.LoadSceneAsync(sceneNum);
-    }
-    public void LoadAdditiveScene(string sceneName)
-    {
-        SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
-    }
-    public void LoadAdditiveScene(int sceneNum)
-    {
-        SceneManager.LoadScene(sceneNum, LoadSceneMode.Additive);
-    }
-    public void NextScene()
-    {
-        int sceneNow = SceneManager.GetActiveScene().buildIndex;
-
-        SceneManager.LoadSceneAsync(++sceneNow);
-    }
-    public void PreviousScene()
-    {
-        int scenaNow = SceneManager.GetActiveScene().buildIndex;
-
-        SceneManager.LoadSceneAsync(--scenaNow);
-    }
-
-    #endregion
-
-
     #region Exit / Quit
 
     public void ExitGame()

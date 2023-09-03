@@ -7,11 +7,12 @@ using UnityEngine.Events;
 
 public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
 {
-    [SerializeField] MainGameManager mainGameManag;
+    [SerializeField] MainGameManager mainGameMng;
+    ObjectPoolingScript poolingScr;
     
     [Space(20)]
     [SerializeField] PlayerStatsSO_Script stats_SO;
-    PlayerMovemRB playerMovScript;
+    PlayerMovemRB playerMovScr;
     [Space(5)]
     [SerializeField] PowerUpSO_Script dash_powerUp_SO;
     [SerializeField] PowerUpSO_Script sonicBoom_powerUp_SO;
@@ -57,16 +58,19 @@ public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
     CustomTimer invTimer = new CustomTimer();
 
     [Header("—— Feedback ——")]
-    [SerializeField] MusicManager musicManager;
+    [SerializeField] MusicManager musicMng;
     [SerializeField] AudioSource damageSfx;
     [SerializeField] AudioSource deathSfx;
+    [SerializeField] ParticleSystem damage_part;
     [SerializeField] ParticleSystem death_part;
 
 
 
     private void Awake()
     {
-        playerMovScript = FindObjectOfType<PlayerMovemRB>();
+        playerMovScr = FindObjectOfType<PlayerMovemRB>();
+        poolingScr = FindObjectOfType<ObjectPoolingScript>();
+        musicMng = FindObjectOfType<MusicManager>();
 
 
         //Setting up the Icons
@@ -110,21 +114,9 @@ public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
         }
 
 
-        #region Shielding Power-up 
-
-        //Adds extra/bonus hearts at the player's max health
-        //when it has been bought
-        if (shielding_powerUp_SO.GetIsUnlocked())
-        {
-            stats_SO.AddMaxHealth(shielding_powerUp_SO.GetUpgradeStage());
-        }
-
-        #endregion
-
-
         #region Stopwatch Power-up 
 
-        //-----------------------------TODO: scrivi qui che cosa fa...
+        //-----------------------------TODO
         //when it has been bought
 
         #endregion
@@ -145,7 +137,7 @@ public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
 
 
             //If max health < 3, then show only the normal hearts
-            if(stats_SO.GetMaxHealth() <= 3)
+            if(stats_SO.GetMaxHealthTemp() <= 3)
             {
                 healthImages[i].color = i < 3 ? Color.white : Color.clear;
             }
@@ -153,7 +145,7 @@ public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
             {
                 //Shows only the unlocked bonus hearts,
                 //and hides the other ones
-                if(i >= stats_SO.GetMaxHealth())
+                if(i >= stats_SO.GetMaxHealthTemp())
                 {
                     healthImages[i].color = Color.clear;
                 }
@@ -214,6 +206,21 @@ public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
     }
 
 
+    public void CheckPowerUp()
+    {
+        #region Shielding Power-up 
+
+        //Adds extra/bonus hearts at the player's max health
+        //when it has been bought
+        if (shielding_powerUp_SO.GetIsUnlocked())
+        {
+            stats_SO.AddMaxHealthTemp(shielding_powerUp_SO.GetUpgradeStage());
+        }
+
+        #endregion
+    }
+
+
 
     #region Damage & Death
 
@@ -228,6 +235,14 @@ public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
 
 
             #region Feedback
+
+            //Plays the damaged particles only
+            //when it's not the last hit
+            if (stats_SO.GetHealth() > 0)
+            {
+                damage_part.gameObject.transform.position = transform.position;
+                damage_part.Play();
+            }
 
             //Plays the audio
             damageSfx.PlayOneShot(damageSfx.clip);
@@ -249,7 +264,7 @@ public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
                 #region Feedback
 
                 //Shows the player's death particles
-                death_part.transform.position = playerMovScript.GetRB().position;
+                death_part.transform.position = playerMovScr.GetRB().position;
                 death_part.Play();
 
                 //Shows the Game Over screen
@@ -257,7 +272,7 @@ public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
                 StartCoroutine(ShowGameOverScreen());
 
                 //Stops the music
-                musicManager.StopCurrentMusic();
+                musicMng.StopCurrentMusic();
 
                 //Plays the death audio
                 deathSfx.Play();
@@ -266,7 +281,7 @@ public class PlayerStatsManager : MonoBehaviour, IPlayer, IDamageable
 
 
                 //Removes the spaceship & control from the player
-                mainGameManag.ActivatePlayer(false);
+                mainGameMng.ActivatePlayer(false);
 
 
                 doOnce_gameOver = false;

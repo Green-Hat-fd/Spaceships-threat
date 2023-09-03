@@ -10,8 +10,17 @@ public class NumberedEventsManager : MonoBehaviour
     {
         public int numberToWait;
         public UnityEvent OnNumberReached;
+
+        public NumbEvents_Class(int numToWait, UnityEvent onNumReach_ev)
+        {
+            numberToWait = numToWait;
+            OnNumberReached = onNumReach_ev;
+        }
     }
 
+    [SerializeField] bool sortAllEvents = true;
+
+    [Space(10)]
     [SerializeField] List<NumbEvents_Class> numberedEvents;
 
     int count = 0;
@@ -19,10 +28,11 @@ public class NumberedEventsManager : MonoBehaviour
 
 
 
-    /*
+    ///*
     private void Awake()
     {
-        SortList(numberedEvents);
+        if (sortAllEvents)
+            numberedEvents = SortList(numberedEvents);
     }
     //*/
 
@@ -85,19 +95,40 @@ public class NumberedEventsManager : MonoBehaviour
     }
 
 
-    //TODO: se hai tempo, fai un algoritmo di ordinamento (sorting algorithm)
-    /*void SortList(List<NumbEvents_Class> allEvents)
-    {
-        List<NumbEvents_Class> list_Temp = new List<NumbEvents_Class>();
+    public int GetCount() => count;
 
+    public void LoadCount(int loadNum)
+    {
+        count = loadNum;
+    }
+
+
+    List<NumbEvents_Class> SortList(List<NumbEvents_Class> allEvents)
+    {
+        List<int> allNum = new List<int>();
+        Dictionary<int, UnityEvent> nEv_dict = new Dictionary<int, UnityEvent>();
+        List<NumbEvents_Class> list_temp = new List<NumbEvents_Class>();
+
+
+        foreach (var nEv in allEvents)
+        {
+            allNum.Add(nEv.numberToWait);
+            nEv_dict.Add(nEv.numberToWait, nEv.OnNumberReached);
+        }
+
+        allNum.Sort();
 
         for (int i = 0; i < allEvents.Count; i++)
         {
-
+            int orderedNum = allNum[i];
+            NumbEvents_Class cl_temp;
+            
+            cl_temp = new NumbEvents_Class(orderedNum,
+                                           nEv_dict[orderedNum]);
+            list_temp.Add(cl_temp);
         }
 
 
-        allEvents = list_Temp;
+        return list_temp;
     }
-    //*/
 }

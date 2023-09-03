@@ -44,4 +44,9 @@ public class ShootingScript : MonoBehaviour
                                        shootingPosition.position,
                                        shootingPosition.rotation);
     }
+
+    public void SetFireRate(float sec)
+    {
+        fireRate = sec;
+    }
 }

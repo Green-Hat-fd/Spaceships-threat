@@ -7,16 +7,18 @@ public class DashPowerUp : MonoBehaviour
     InputManager.PlayerActions PlayerInput;
 
     [SerializeField] PowerUpSO_Script dash_SO;
-    [SerializeField] PlayerMovemRB movemScript;
+    [SerializeField] PlayerMovemRB playerMovScr;
 
     [Space(20)]
     [SerializeField] float distanceToDash;
     Vector3 playerMovem;
 
     [Header("—— Feedback ——")]
-    [SerializeField] ParticleSystem dashEffect_partA,
-                                    dashEffect_partB,
-                                    dashEffect_partC;
+    [SerializeField] AudioSource dashSfx;
+
+    [SerializeField] ParticleSystem dashEffect_partA;
+    [SerializeField] ParticleSystem dashEffect_partB;
+    [SerializeField] ParticleSystem dashEffect_partC;
 
 
 
@@ -56,21 +58,25 @@ public class DashPowerUp : MonoBehaviour
 
     void ActivateDashPowerUp()
     {
-        Vector3 oldPos = movemScript.GetRB().position;    //Used for the particle later
+        Vector3 oldPos = playerMovScr.GetRB().position;    //Used for the particle later
 
         //Calculates the next position to move
-        Vector3 posToMove = movemScript.GetRB().position
+        Vector3 posToMove = playerMovScr.GetRB().position
                               +
                              playerMovem * distanceToDash;
 
         //Limits the new "dash position" inside the boundary box
-        posToMove = movemScript.LimitInsideBoundaryBox(posToMove);
+        posToMove = playerMovScr.LimitInsideBoundaryBox(posToMove);
 
         //Moves the player in the new "dash position"
-        movemScript.GetRB().MovePosition(posToMove);
+        playerMovScr.GetRB().MovePosition(posToMove);
 
 
-        #region Animations
+        #region Feedback
+
+        //Plays the sound
+        dashSfx.Play();
+
 
         Vector3 halfPos = Vector3.Lerp(oldPos, posToMove, 0.5f);
 
@@ -93,13 +99,13 @@ public class DashPowerUp : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Vector3 p = movemScript.GetRB().position + playerMovem * distanceToDash;
-        p = movemScript.LimitInsideBoundaryBox(p);
+        Vector3 p = playerMovScr.GetRB().position + playerMovem * distanceToDash;
+        p = playerMovScr.LimitInsideBoundaryBox(p);
 
         if (playerMovem != Vector3.zero)
         {
             Gizmos.color = new Color(0, 1, 1, 0.5f);
-            Gizmos.DrawLine(movemScript.GetRB().position, p);
+            Gizmos.DrawLine(playerMovScr.GetRB().position, p);
             //Gizmos.DrawCube(p, Vector3.one * 0.45f);
             Gizmos.DrawSphere(p, 0.25f);
         }
